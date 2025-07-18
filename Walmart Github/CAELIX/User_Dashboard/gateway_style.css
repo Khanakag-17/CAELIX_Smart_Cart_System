@@ -1,0 +1,178 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Merienda';
+}
+
+body {
+    background: url(bg.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 25px;
+}
+
+.container form {
+    width: 700px;
+    padding: 40px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+form .row {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.row .column {
+    flex: 1 1 250px;
+}
+
+.column .title {
+    font-size: 25px;
+    color: #333;
+    text-transform: uppercase;
+    font-weight:900;
+    margin-bottom: 10px;
+}
+
+.column .input-box {
+    margin: 15px 0;
+}
+
+.input-box span {
+    display: block;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.input-box input {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    background: #f9f9f9;
+    color: #333;
+}
+
+.input-box input:focus {
+    border-color: #333;
+    outline: none;
+    background: #fff;
+}
+
+.input-box img {
+    height: 34px;
+    margin-top: 5px;
+    filter: drop-shadow(0 0 1px #000);
+}
+
+form .btn {
+    width: 100%;
+    padding: 12px;
+    background: #4b4b4b;
+    border: none;
+    border-radius: 6px;
+    font-size: 17px;
+    color: #fff;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+form .btn:hover {
+    background: #333;
+}
+
+.expiry-select {
+    display: flex;
+    gap: 10px;
+}
+
+.expiry-select select {
+    text-align: left;
+    min-width: 80px;
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    background: #f9f9f9;
+    color: #333;
+    flex: 1;
+    line-height: 1.2;
+}
+
+.expiry-select select:focus {
+    border-color: #827f96;
+    background: #fff;
+}
+
+.back-btn-wrapper {
+    width: 700px;
+    margin: 20px auto 0;
+    text-align: center;
+}
+
+.back-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #eee;
+    color: #333;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 6px;
+    transition: background 0.3s;
+}
+
+.back-btn:hover {
+    background-color: #ddd;
+}
+
+
+/* ✅ Mobile responsiveness */
+@media (max-width: 768px) {
+    .container form,
+    .back-btn-wrapper {
+        width: 100%;
+        padding: 20px;
+    }
+
+    form .row {
+        flex-direction: column;
+    }
+
+    .back-btn {
+        width: 90%;
+        max-width: 300px;
+    }
+
+    .input-box input,
+    .expiry-select select {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    form .btn {
+        font-size: 16px;
+        padding: 10px;
+    }
+
+    .column .title {
+        font-size: 18px;
+    }
+}

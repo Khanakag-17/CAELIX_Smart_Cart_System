@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Caelix</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@48,400,0,0" />
+  <link rel="stylesheet" href="user_style.css">
+</head>
+
+
+<body>
+<div class ="main_container" id = "dashboardWrapper">
+   <div class="container">
+
+      <aside>           
+         <div class="top">
+           <div class="logo">
+             <h2><span class="danger">Caelix</span> </h2>
+           </div>
+           <div class="close" id="close_btn">
+            <span class="material-symbols-sharp">
+              close
+              </span>
+           </div>
+         </div>
+         <!-- end top -->
+
+          <div class="sidebar">
+            <a href="#" id="dashboard-link">
+              <span class="material-symbols-sharp">grid_view </span>
+              <h3>Dashboard</h3>
+           </a>
+           <a href="#">
+              <span class="material-symbols-sharp">mail_outline </span>
+              <h3>Notifications</h3>
+              <span class="msg_count">0</span>
+           </a>
+           <a href="#">
+              <span class="material-symbols-sharp">settings </span>
+              <h3>settings</h3>
+           </a>
+           <a href="#" id="upplan-link">
+              <span class="material-symbols-sharp">star </span>
+              <h3>Upgrade Plan</h3>
+           </a>
+           <a href="">
+              <span class="material-symbols-sharp">logout </span>
+              <h3 class = "logout-btn">logout</h3>
+           </a>
+        </div>
+
+      </aside>
+      <!-- --------------
+        end asid
+      -------------------- -->
+
+      <!-- --------------
+        start main part
+      --------------- -->
+      
+      <main id="dashboard-section">
+        <h1>Dashbord</h1>
+
+        <!-- <div class="date">
+            <input type="date" >
+       </div> -->
+
+        <div class="insights">
+            <!-- start expenses -->
+              <div class="expenses">
+                <div class="middle">
+                    <div id="startShoppingBtn" class="btn" style="cursor: pointer;">
+                      <span class="material-symbols-sharp">local_mall</span> Start Shopping!
+                    </div>
+                </div>
+             </div>
+            <!-- end seling -->
+        </div>
+       <!-- end insights -->
+
+      <div class="recent_order">
+        <h2>Recent Purchases</h2>
+        <table>
+          <thead>
+            <tr>
+              <th class="date-cell">Date</th>
+              <th class="total-cell">Total</th>
+              <th class="action-cell">Action</th>
+            </tr>
+          </thead>
+          <tbody id="recentPurchases"></tbody>
+        </table>
+      </div>
+
+      </main>
+
+        <section id = "upplan-section" style = "display:none;">
+          <main>
+            <h1 style="margin-left: 3rem">Upgrade Plan</h1>
+              <div id="subscription">
+                <div class="card card-basic">
+                    <h1 class="card-title">Caelix Solo</h1>
+                    <div class="card-body">
+                        <div class="card-price">
+                            <p>₹ <span class="card-price-value">300</span><br>per month</p>
+                        </div>
+                        <div class="card-features">
+                            <ul>
+                                <li>Limited smart scans</li>
+                                <li>Starter loyalty rewards</li>
+                                <li>Basic discount access</li>
+                            </ul>
+                        </div>
+                        <button class="card-btn">BUY NOW</button>
+                    </div>
+                </div>
+
+                <div class="card card-standard">
+                    <h1 class="card-title">Caelix Flex</h1>
+                    <div class="card-body">
+                        <div class="card-price">
+                            <p>₹ <span class="card-price-value">425</span><br>per month</p>
+                        </div>
+                        <div class="card-features">
+                            <ul>
+                                <li>Unlimited solo scans</li>
+                                <li>Extra loyalty rewards</li>
+                                <li>Member-only deals</li>
+                                <li>One-time group access</li>
+                            </ul>
+                        </div>
+                        <button class="card-btn">BUY NOW</button>
+                    </div>
+                </div>
+
+                <div class="card card-premium">
+                    <h1 class="card-title">Caelix Sync</h1>
+                    <div class="card-body">
+                        <div class="card-price">
+                            <p>₹ <span class="card-price-value">550</span><br>per month</p>
+                        </div>
+                        <div class="card-features">
+                            <ul>
+                                <li>Unlimited scans</li>
+                                <li>Group shopping access</li>
+                                <li>Shared checkout</li>
+                                <li>Early access to offers</li>
+                                <li>Bonus loyalty boosters</li>
+                                <li>Premium wallet offers</li>
+                            </ul>
+                        </div>
+                        <button class="card-btn">BUY NOW</button>
+                    </div>
+                </div>
+              </div>
+          </main>
+        </section>
+      
+      <!------------------
+         end main
+        ------------------->
+
+      <!----------------
+        start right main 
+      ---------------------->
+     <class class="right">
+
+    <div class="top">
+    <button id="menu_bar">
+        <span class="material-symbols-sharp">menu</span>
+    </button>
+
+    <div class="theme-toggler">
+        <span class="material-symbols-sharp">light_mode</span>
+        <span class="material-symbols-sharp active">dark_mode</span>
+    </div>
+        <div class="profile">
+        <div class="info">
+            <p><b id="welcome-name">USER</b></p>
+            <p id="user-role" style="text-transform: capitalize;">user role</p>
+            <small class="text-muted"></small>
+        </div>
+        <div class="profile-photo">
+           <div class="profile-section" id="profileBtn">
+            <div class="profile-icon"><img src="profile-1.png" alt=""></div>
+            <div class="profile-info" id="profileInfo">
+              <p id="user-mail">user mail</p>
+              <p id="created-at">2025</p>
+              <p>Status: <span class="active-status">Active</span></p>
+              <div class="loyalty">
+                <h4 style="font-size: 1rem;">Loyalty Points <span class="points" id="loyalty-points">1,250</span></h4>
+                <p id="user-tier" style="text-transform: capitalize;">Silver</p>
+                <p>Next Tier: Gold (2,000 pts)</p>
+                <div class="loyalty-bar">
+                  <div class="loyalty-fill" style="width: 25%"></div>
+                </div>
+              </div>
+              <div class="loyalty">
+                <h4 style="font-size: 1rem; margin-bottom: 0.7rem;">Group Access</h4>
+                <div style="display: flex; gap: 0.6rem; width: 100%;">
+                  <button id="openCreateGroupBtn" class="group-btn" style="display: block;">➕ Create</button>
+                  <button id="openJoinGroupBtn" class="group-btn" style="display: block;">🔗 Join</button>
+                </div>
+              </div>
+              <div class="loyalty">
+                <h4 style="font-size: 1rem; margin-bottom: 0.7rem;">My Group</h4>
+                <p>Manage your group or leave anytime</p> <!-- This line fixes the card height visually -->
+                <div style="display: flex; gap: 0.6rem; width: 100%; margin-top: 0.6rem;">
+                  <button id="openMyGroupBtn" class="group-btn hidden">📋 My Group</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+    </div>
+
+  <div class="recent_updates">
+    <h2 style="margin-bottom: 0.8rem;">Wallet</h2>
+    <div class="updates">
+        <h2>Balance:</h2>
+        <h2 style="margin-bottom: 20px; font-size: 1rem ;" id="wallet-balance">INR 1200.00</h2>
+
+        <a href=" " class="gateway-btn" alt="" style="font-size: 0.8rem; margin-top: 1.2rem;">Add Money to Wallet</a>
+    </div>
+  </div>
+
+
+  <div class="sales-analytics">
+    <h2>Exclusive Offers</h2>
+
+    <!-- Offer 1: Wallet Bonus -->
+    <div class="item onlion">
+      <div class="icon">
+        <span class="material-symbols-sharp">account_balance_wallet</span>
+      </div>
+      <div class="right_text">
+        <div class="info">
+          <h3>💰 Wallet Bonus</h3>
+          <small class="text-muted">Add ₹1000 to get ₹100 extra</small>
+        </div>
+        <h5 class="success">+₹100</h5>
+        <h3 class = 'gateway-btn' style="font-size: 0.8rem; margin-top: 0.7rem;">Recharge Now</h3>
+      </div>
+    </div>
+
+    <!-- Offer 2: Loyalty Reward -->
+    <div class="item onlion">
+      <div class="icon">
+        <span class="material-symbols-sharp">redeem</span>
+      </div>
+      <div class="right_text">
+        <div class="info">
+          <h3>🎁 Loyalty Reward</h3>
+          <small class="text-muted">Surprise on your 5th purchase</small>
+        </div>
+        <h5 class="danger">5️⃣ Purchases</h5>
+        <h3 class = 'gateway-btn' style="font-size: 0.8rem; margin-top: 0.7rem;">Track Progress</h3>
+      </div>
+    </div>
+  </div>
+  <div id="eBillOverlay" class="bill-overlay hidden">
+    <div id="eBill" class="bill-container">
+      <span id="closeBillBtn" class="close-bill-icon material-symbols-sharp">close</span>
+      <div id="eBillContent"></div>
+    </div>
+  </div>
+</class>
+</div>
+</div>
+
+<!-- Create Group Modal -->
+<div id="createGroupModal" class="modal hidden">
+  <div class="modal-content">
+    <h2 style="margin-bottom: 1rem;">Create Group</h2>
+    <input type="text" id="groupNameInput" placeholder="Group Name" />
+    <div id="allowedMembersList">
+      <div class="member-input">
+        <input type="email" placeholder="Member Email" class="member-email" />
+        <select class="member-role">
+          <option value="member">Member</option>
+          <option value="owner">Owner</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions spaced">
+      <div class="left-actions">
+        <button id="addMemberBtn" class="btn small">+ Add Member</button>
+      </div>
+      <div class="right-actions">
+        <button id="submitCreateGroupBtn" class="btn small green-gradient">Create</button>
+        <button class="btn small close-modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Join Group Modal -->
+<div id="joinGroupModal" class="modal hidden">
+  <div class="modal-content">
+    <h2 style="margin-bottom: 1rem;">Join Group</h2>
+    <input type="text" id="joinGroupCodeInput" placeholder="Enter Group Code" />
+    <div class="modal-actions">
+      <button id="submitJoinGroupBtn" class="btn small green-gradient">Join</button>
+      <button class="btn small close-modal">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div id="successToast" class="toast hidden">✅ Group created successfully!</div>
+
+<!--Copy Code-->
+<div id="groupSuccessPopup" class="group-popup hidden">
+  <p>✅ Group Created: <strong id="popupGroupName">My Group</strong></p>
+  <p>Group Code: <code id="popupGroupCode">ABC123</code></p>
+  <button id="copyGroupCodeBtn" class="btn small green-gradient">📋 Copy Code</button>
+</div>
+
+<!-- My Group Modal -->
+<div id="myGroupModal" class="modal hidden">
+  <div class="modal-content">
+    <h2 style="margin-bottom: 0.8rem;">My Group</h2>
+
+    <p><strong>Group Name:</strong> <span id="myGroupName"></span></p>
+    <p><strong>Group Code:</strong> <span id="myGroupCode"></span></p>
+    <p><strong>Your Role:</strong> <span id="myGroupRole"></span></p>
+
+    <h3 style="margin-top: 1rem;">Members</h3>
+    <ul id="myGroupMembers" class="member-list"></ul>
+
+    <div class="modal-actions" style="margin-top: 1.5rem;">
+      <button id="leaveGroupBtn" class="btn small red-btn">🚪 Leave Group</button>
+      <button id="deleteGroupBtn" class="btn small red-btn hidden">🗑️ Delete Group</button>
+      <button class="btn small close-modal">Cancel</button>
+    </div>
+  </div>
+</div>
+
+  <script type="module" src="user_script.js"></script>
+</body>
+</html>

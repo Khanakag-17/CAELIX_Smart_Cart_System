@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Caelix</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="top-bar">
+      <div class="header-left">
+        <img src="https://img.icons8.com/ios-filled/50/ffffff/shopping-cart.png" alt="Logo" class="logo" />
+        <p id="cart-id-container" class="cart-id hidden">Cart ID: <span id="cart-id"></span></p>
+        
+      </div>
+      <div class="header-center">
+        <p id="link-status-msg" class="link-status">✅ Cart linked successfully!</p>
+      </div>
+      <div class="header-right">
+        <img src="profile-1.png" alt="User Avatar" class="avatar" />
+      </div>
+    </header>
+
+    <main class="scanner-section">
+      <div id="barcode-scanner" class="scanner-box"></div>
+    </main>
+
+    <aside class="live-cart">
+      <h2 style="color: #ff7782;">Live Cart</h2>
+      <div class="cart-items-container">
+        <div class="cart-header-row">
+          <span class="cart-header-name">Product</span>
+          <span class="cart-header-price">Price</span>
+        </div>
+
+        <ul id="cart-items"></ul>
+      </div>
+
+      <div class="total-summary">
+        <p>Total: ₹<span id="total-amount">0</span></p>
+      </div>
+      <button id="checkout-btn">Proceed to Checkout</button>
+
+      <!-- Small static recommendations after checkout button -->
+      <div id="inline-suggestions" class="inline-suggestions hidden">
+        <div class="suggestion-group">
+          <h3>📦 Recommended Products</h3>
+          <div class="group-cards">
+            <div class="suggestion-card">
+              <img src="COCA-COLA-1.jpg" alt="Tide" />
+              <div class="details">
+                <p class="name">Coca-Cola</p>
+                <p class="price">₹40</p>
+              </div>
+            </div>
+            <div class="suggestion-card">
+              <img src="colin-glass-cleaner-1480669568-2621641.jpeg" />
+              <div class="details">
+                <p class="name">Colin</p>
+                <p class="price">₹85</p>
+              </div>
+            </div>
+          </div>
+          <button class="add-btn">Add to Cart +</button>
+        </div>
+
+        <div class="suggestion-group">
+          <h3>🔁 Frequently Bought Together</h3>
+          <div class="group-cards">
+            <div class="suggestion-card">
+              <img src="adv-pack-blue.png" />
+              <div class="details">
+                <p class="name">Sugar</p>
+                <p class="price">₹88</p>
+              </div>
+            </div>
+            <div class="suggestion-card">
+              <img src="KFTKB-20190602125343-1000x1000.jpg" />
+              <div class="details">
+                <p class="name">Tomato Ketchup</p>
+                <p class="price">₹55</p>
+              </div>
+            </div>
+          </div>
+          <button class="add-btn">Add to Cart +</button>
+        </div>
+      </div>
+
+    </aside>
+
+  </div>
+
+  <div id="link-overlay" class="overlay">
+    <div class="overlay-card">
+      <p>Please scan your Cart QR to start</p>
+      <button id="scan-cart-btn">Scan Cart QR</button>
+    </div>
+  </div>
+
+  <div id="checkout-lock-overlay" class="hidden">
+    <div class="overlay-message">
+      🔒 Checkout in progress by another group member. Please wait…
+    </div>
+  </div>
+
+  <script src="./lib/html5-qrcode.min.js"></script>
+  <script type="module" src="./script.js"></script>
+
+</body>
+</html>
+
