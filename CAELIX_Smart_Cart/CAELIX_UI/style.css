@@ -1,0 +1,1275 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+
+:root {
+    --basic-bg: linear-gradient(135deg, #5f6769, #1f2b2c);
+  --standard-bg: linear-gradient(135deg, #003973, #bfbee5);
+  --premium-bg: linear-gradient(135deg, #d1b043, #8a4500); 
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Merienda';
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+header{
+    font-family: 'Merienda';
+    background: transparent;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    padding: 20px 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 99;
+}
+
+header.scrolled {
+  background: rgba(73, 73, 73, 0.2); /* light translucent background */
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 10px rgba(23, 23, 23, 0.2);
+}
+
+
+.navigation a, .navigation .btnLogin-popup{
+    position: relative;
+    color: white;
+    text-decoration: none;
+    margin-left: auto;
+    margin-right: 30px;
+    font-size: 1.25em;
+    transition: color 0.3s ease;
+    text-shadow: #212121 0px 0px 5px,  #212121 0px 0px 10px, #212121 0px 0px 15px, #212121 0px 0px 20px;
+}
+
+.navigation .btnLogin-popup{
+    font-family: 'Merienda';
+    background: transparent;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border-color: whitesmoke;
+}
+
+.navigation .btnLogin-popup:hover{
+    background-color: rgb(224, 224, 224);
+    opacity: 1;
+    color: #333;
+    text-shadow: none;
+}
+
+
+.navigation a::after{
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: white;
+    bottom: -6px;
+    border-radius: 20px;
+    transform: scaleX(0);
+    transition: transform 0.5s;
+    transform-origin: bottom right;
+}
+
+.navigation a:hover::after{
+    transform: scaleX(1);
+    background-color: #cccccc;
+}
+
+.navigation a:hover{
+    color: #cccccc;
+}
+
+
+.logo{
+    position: relative;
+    border: 2px dashed white;
+    background: transparent;
+    padding: 10px 20px;
+    border-radius: 50%;
+    backdrop-filter: blur(8px);
+    user-select: none;
+}
+
+.navigation{
+    display: flex;
+    align-items: center;
+}
+
+
+.wrapper{
+    position: absolute;
+    width: 390px;
+    height: 440px;
+    background: transparent;
+    border: 2px solid whitesmoke;
+    border-radius: 20px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 0 25px rgba(145, 143, 143, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transform: scale(0);
+    transition: transform .5s ease, height .2s ease;
+}
+
+.content{
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: scale(1);
+}
+
+.wrapper.active-popup{
+    transform: scale(1);
+}
+
+.wrapper.active{
+    height: 520px;
+}
+
+.wrapper .form-box{
+    width: 100%;
+    padding: 40px;
+}
+
+.wrapper .form-box.login{
+    position: absolute;
+    transform: translateX(0);
+}
+
+.wrapper .form-box.register{
+    position: absolute;
+    transform: translateX(400px);
+    
+}
+
+.wrapper .user-admin{
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-admin a{
+    position: relative;
+    width: 50%;
+    text-align: center;
+    font-size: 1.15em;
+    font-weight: 500;
+    color: whitesmoke;
+    text-decoration: none;
+    margin-bottom: 3px;
+}
+
+.user-admin a:hover{
+    color: #cccccc;
+    text-decoration: underline;
+}
+
+.user-admin .vl{
+    border-left: 2px solid whitesmoke;
+    height: 25px;
+    position: absolute;
+    left: 50%;
+    margin-left: -3px;
+    top: 0;
+    z-index: 1;
+
+}
+
+.wrapper .form.user{
+    position: relative;
+    transform: scale(1);
+    transition: transform 0.2s ease;
+}
+.wrapper .form.admin{
+    transform: scale(0);
+    visibility: hidden;
+    position: absolute;
+}
+
+.wrapper.active-admin{
+    height: 500px;
+}
+
+.wrapper.active-admin .form.admin{
+    position: relative;
+    transform: scale(1);
+    visibility: visible;
+    transition: transform 0.2s ease, visibility 0.2s ease;
+}
+
+.wrapper.active-admin .form.user{
+    transform: scale(0);
+    position: absolute;
+}
+
+.form-box h2{
+    color: whitesmoke;
+    margin-bottom: 25px;
+    font-family: 'Merienda';
+    font-size: 2em;
+    text-align: center;
+}
+
+.input-box{
+    position: relative;
+    width: 100%;
+    height: 50px;
+    border-bottom: 2px solid #ccc;
+    margin: 25px 0;
+}
+
+.input-box input{
+    background: transparent;
+    border: none;
+    outline: none;
+    width: 100%;
+    height: 100%;
+    color: #ccc;
+    caret-color: #ccc;
+    font-weight:400;
+
+}
+
+.input-box label{
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    color: #ccc;
+    font-size: 1.15em;
+    font-weight: 500;
+    transition: .3s;
+    pointer-events: none;
+}
+
+.input-box input:focus~label,
+.input-box input:valid~label{
+    top: -5px;
+}
+
+
+.input-box .icon{
+    color: #ccc;
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 1.15em;
+    line-height: 35px;
+}
+
+.remember-forgot{
+    color: #ccc;
+    margin: -10px 0 10px;
+    font-size: 0.9em;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+}
+
+.remember-forgot label input{
+    accent-color: #ccc;
+    margin-right: 3px;
+}
+
+.remember-forgot a{
+    color: #ccc;
+    text-decoration: none;
+}
+
+.remember-forgot a:hover{
+    color: #999999;
+    text-decoration: underline;
+}
+
+.form-box .btn{
+    margin-top: 19px;
+    width: 100%;
+    height: 45px;
+    font-family: 'Merienda';
+    background: transparent;
+    border: 1px solid #ccc;
+    outline: none;
+    border-radius: 7px;
+    color:rgb(224, 224, 224);
+    font-size: 1.05em;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.form-box .btn:hover{
+    background-color: rgb(224, 224, 224);
+    opacity: 1;
+    color: #333;
+}
+
+.login-register{
+    color: #ccc;
+    font-size: 0.9em;
+    font-weight: 500;
+    text-align: center;
+    margin: 23px 0 0;
+}
+
+.login-register a{
+    font-weight: 600;
+    color: #dedede;
+    text-decoration: none;
+}
+
+.login-register a:hover{
+    color: white;
+    text-decoration: underline;
+}
+
+.wrapper .form-box.login{
+    transition: transform 0.2s ease;
+    transform: translateX(0);
+}
+
+.wrapper.active .form-box.login{
+    transition: none;
+    transform: translate(-400px)
+}
+
+.wrapper .form-box.register{
+    position: absolute;
+    transform: translateX(400px);
+    transition: none;
+}
+
+.wrapper.active .form-box.register{
+    transition: transform 0.2s ease;
+    transform: translateX(0);
+}
+
+.wrapper .icon-close{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40px;
+    height: 40px;
+    border: 1.2px solid #ccc;
+    border-bottom-left-radius: 20px; ;
+    color: white;
+    font-size: 1.75em;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero .btnGetStarted-popup{
+    padding: 10px 20px;
+    font-family: 'Merienda';
+    background:  rgb(199, 199, 199, 0.9);
+    border: 2px groove #696868;
+    outline: none;
+    border-radius: 30px;
+    color:#212121;
+    font-size: 2.7em;
+    font-weight: 700;
+    cursor: pointer;
+    font-style: italic;
+    box-shadow: #212121 0px 0px 30px, #212121 0px 0px 30px, #212121 0px 0px 40px;
+}
+
+.hero .btnGetStarted-popup:hover{
+    background-color: rgb(238, 236, 236);
+    opacity: 1;
+    color: #333;
+}
+
+.hero {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    color: white;
+    transition: transform 1s ease, opacity 1s ease, visibility 1s ease;
+}
+
+.hero h1 {
+    font-size: 25em;
+    font-family: 'Merienda';
+    font-weight: 700;
+    font-style: italic;
+    text-shadow: #212121 0px 0px 30px, #212121 0px 0px 30px, #212121 0px 0px 40px;
+}
+
+
+body.show-login .hero {
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, -50%) scale(0.5);
+    transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
+}
+
+#landing-page {
+  background: url('background.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'Merienda', cursive;
+  position: relative; /* Needed for absolute positioning inside */
+}
+
+#landing-page img{
+    margin-top: 390px;
+    margin-left: 1165px;
+    width: 350px;
+    height: 350px;
+    z-index: 30;
+}
+
+#loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    display: none; /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+}
+
+.spinner {
+    border: 6px solid #ccc;
+    border-top: 6px solid transparent;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+
+#features{
+    background: url(bg.jpg);
+    background-size: cover;
+    background-position: center;  
+    border-top: #999999 1px solid;
+    box-shadow: #696868 0px 0px 5px; 
+    display: flex;
+    flex-direction:row;
+    justify-content:space-around;
+    align-items: center;
+    width: 100%;
+    min-height: 50vh;
+    font-family: 'Merienda';
+}
+
+#features h2{
+    color: whitesmoke;
+    text-shadow: #999999 0px 0px 20px;
+    font-size: 3em;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative;
+    margin-left: 5%;
+}
+
+#features h2::after{
+    position: absolute;
+    box-shadow: #999999 0px 0px 20px;
+    content: '';
+    top: 20px;
+    left: -45px;
+    height: 0;
+    width: 0;
+    border-top: 30px solid transparent;
+    border-left: 30px solid #ccc;
+}
+
+#features h2::before{
+    position: absolute;
+    box-shadow: #999999 0px 0px 20px;
+    content: '';
+    top: 20px;
+    right: -45px;
+    height: 0;
+    width: 0;
+    border-top: 30px solid transparent;
+    border-right: 30px solid #ccc;
+}
+
+#features .paragraph{
+    text-shadow: #999999 0px 0px 20px;
+    width: 40%;
+    font-size: 0.8em;
+    color:  whitesmoke;
+    text-align: center;
+    line-height: 1.5rem;
+    white-space: 1px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+#features .cards{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 35px;
+    z-index: 9;
+    margin-top: 20px;
+}
+
+#features .cards .card {
+  height: 200px;
+  width: 300px;
+  padding: 20px;
+  background: #cccccceb;
+  border-radius: 30px;
+  position: relative;
+  box-shadow: #ccc 0px 0px 10px;
+  border: #212121 2px solid;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+#features .card p {
+  font-size: 0.85rem;
+  color: #222;
+  line-height: 1.4rem;
+  text-align: justify;
+  padding: 0 12px 0 12px; 
+  margin: 0;
+}
+
+
+#features .card p strong {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: #2a0d0d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 2px #999;
+}
+
+#features .cards .card::before{
+    position: absolute;
+    content: '';
+    height: 200px;
+    width: 300px;
+    border-radius: 50px;
+    background: rgb(108, 107, 107);
+    transform: rotate(0deg);
+    border: 2px ridge #565656;
+    z-index: -1;
+}
+
+#features .cards .card:hover::before{
+    transform: rotate(12deg);
+    transition: transform 0.4s ease;
+}
+
+#features .cards .card ion-icon{
+
+    font-size: 2.5rem;
+    color: rgb(35, 0, 0);
+    margin-bottom: 10px;
+    margin-left: 129px;
+    margin-top: 30px;
+}
+
+#features .card h3 {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+  color: #270c0c;
+  text-align: center;
+  transform: none;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 2px #999;
+}
+
+#features .card .content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+}
+
+
+
+#subscription {
+    background: url('bg.jpg');
+    background-size: cover;
+    background-position: top;
+    min-height: 100vh;
+    font-family: 'Merienda';
+    position: relative;
+    border-top: 2px ridge #adabab;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#subscription .overlay-bottom {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(50, 48, 48, 0.3);
+    clip-path: polygon(0 100%, 0 80%, 25% 85%, 50% 75%, 75% 85%, 100% 80%, 100% 100%);
+    pointer-events: none;
+}
+
+#subscription .overlay-bottom::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(37, 36, 36, 0.363), rgba(147, 147, 147, 0.1));
+    clip-path: polygon(0 100%, 0 85%, 25% 87%, 50% 80%, 75% 87%, 100% 85%, 100% 100%);
+    pointer-events: none;
+}
+
+#subscription .overlay-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(50, 48, 48, 0.3);
+    clip-path: polygon(0 0, 0 20%, 25% 15%, 50% 25%, 75% 15%, 100% 20%, 100% 0);
+    pointer-events: none;
+    z-index: 1;
+}
+
+#subscription .overlay-top::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(37, 36, 36, 0.363), rgba(147, 147, 147, 0.1));
+    clip-path: polygon(0 0, 0 15%, 25% 12%, 50% 20%, 75% 12%, 100% 15%, 100% 0);
+    pointer-events: none;
+}
+
+#subscription .card {
+  width: 20rem;
+  height: 70vh;
+  position: relative;
+  z-index: 2;
+  color: #fff;
+  border-radius: 1rem;
+  border: whitesmoke 2px ridge;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  box-shadow: 0 0.2rem 0.5rem rgb(176, 176, 176);
+  transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
+}
+
+#subscription .card-basic, .card-basic .card-price{
+    background-image: var(--basic-bg);
+}
+
+#subscription .card-standard, .card-standard .card-price{
+    background-image: var(--standard-bg);
+}
+
+#subscription .card-premium, .card-premium .card-price{
+    background-image: var(--premium-bg);
+}
+
+#subscription .card:not(:first-child){
+    margin-left: 3.5rem;
+}
+
+#subscription .card:hover {
+  transform: scale(1.15);
+  box-shadow: 0 12px 24px rgb(135, 135, 135);
+  cursor: pointer;
+}
+
+#subscription .card-body{
+    position: relative;
+    height: 75%;
+    border-top: .06rem solid #fff;
+    border-radius: 8rem 8rem;
+}
+
+#subscription .card-price, .card-features, .card-btn {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#subscription .card-price {
+    top: -10%;
+    width: 7.5rem;
+    height: 7rem;
+    border-radius: 50%;
+    border: .15rem solid #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#subscription .card-price-value{
+    font: 700 2.5rem sans-serif;
+}
+
+#subscription .card-features {
+    top: 31%;
+    width: 100%;
+}
+
+#subscription .card-features ul{
+    list-style-type: none;
+}
+
+#subscription .card-features ul li{
+    position: relative;
+}
+
+#subscription .card-features ul li:not(:last-of-type){
+    margin-bottom: 1rem;
+}
+
+#subscription .card-features ul li::before, 
+.card-features ul li::after{
+    position: absolute;
+    content: ''; 
+    top: 50%;
+    transform: translateY(-50%) rotate(-45deg);
+}
+
+#subscription .card-features ul li::before{
+    width: 0.7rem;
+    height: 0.4rem;
+    border-left: 0.15rem solid #065c01;
+    border-bottom: 0.15rem solid #065c01;
+
+    left: 18%;
+    top: 40%;
+    z-index: 200;
+}
+
+#subscription .card-features ul li::after{
+    width: 1.5rem;
+    height: 1.5rem;
+    background-color: #fff;
+    border-radius: 50%;
+    left: 16%
+}
+
+#subscription .card-btn {
+    bottom: 0;
+    width: 70%;
+    background-color: #fff;
+    padding: 1rem;
+    border: none;
+    border-radius: 1.5rem;
+    text-transform: uppercase;
+    font-size: 1em;
+    font-weight: 500;
+    color: #212121;
+}
+
+#subscription .card-btn:hover{
+    background-color: #333;
+    border: whitesmoke 2px groove;
+    color: whitesmoke;
+    box-shadow: whitesmoke 0px 0px 7px;
+    cursor: pointer;
+}
+
+#footer {
+    border-top: #ccc 1px ridge;
+    box-shadow: #ccc 0px 0px 5px;
+  position: relative;
+  background: url('footer.jpg') no-repeat bottom center/cover;
+  color: #fff;
+  min-height: 10vh;
+  padding: 30px 10px 20px;
+  display: flex;
+  flex-direction: grid;
+  font-family: 'Merienda', cursive;
+  text-align: center;
+  overflow: hidden;
+}
+
+#footer:before{
+    background-color: #686d6f96;
+}
+
+.footer-container {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-logo {
+  font-size: 2em;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 25px;
+  margin-bottom: 20px;
+}
+
+.footer-links a {
+  color: #ccc;
+  text-decoration: none;
+  font-size: 1.1em;
+  transition: color 0.3s;
+}
+
+.footer-links a:hover {
+  color: #fff;
+}
+
+.footer-social {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.footer-social a {
+  color: #ccc;
+  font-size: 1.5em;
+  transition: color 0.3s;
+}
+
+.footer-social a:hover {
+  color: #fff;
+}
+
+.footer-newsletter {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.footer-newsletter input[type="email"] {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 20px;
+  width: 250px;
+  outline: none;
+}
+
+.footer-newsletter button {
+  padding: 10px 20px;
+  background-color: #ccc;
+  color: #333;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.footer-newsletter button:hover {
+  background-color: #fff;
+}
+
+.footer-copy {
+  font-size: 0.9em;
+  color: #bbb;
+  margin-top: 10px;
+}
+
+
+
+
+/* Desktop-only hover fixes */
+@media (min-width: 769px) {
+  .navigation a:hover::after { transform: scaleX(1); background-color: #ccc; }
+  .navigation a:hover { color: #ccc; }
+  .btnLogin-popup:hover { background-color: #e0e0e0; color: #333; text-shadow: none; }
+  #features .cards .card:hover::before { transform: rotate(12deg); }
+  #subscription .card:hover { transform: scale(1.1); box-shadow: 0 10px 20px #999; }
+  .form-box .btn:hover { background-color: #e0e0e0; color: #333; }
+  .footer-links a:hover, .footer-social a:hover { color: #fff; }
+}
+
+/* Full mobile responsiveness */
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  header {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: small;
+  }
+
+  .logo {
+    margin-top: 4%;
+    font-size: 1.5em;
+    text-align: center;
+  }
+
+  .navigation {
+    display: flex;
+    flex-direction: grid;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .navigation a,
+  .btnLogin-popup {
+    margin: 10px 0px;
+    text-align: center;
+  }
+
+
+  .hero {
+    top: 40%;
+    transform: translate(-50%, -40%);
+    width: 90%;
+  }
+
+  .hero h1 {
+    font-size: 7em;
+    word-break: break-word;
+    text-align: center;
+  }
+
+  .hero .btnGetStarted-popup {
+    font-size: 2em;
+    padding: 10px 20px;
+  }
+
+  #landing-page img#cart {
+    margin-top: 150%;
+    margin-left: 60%;
+    width: 40%;
+    height: 40%;
+    z-index: 30;
+  }
+
+  .wrapper {
+    width: 65%;
+    height: 47%;
+    padding: 10px;
+  }
+
+  .wrapper .form-box {
+    padding: 20px;
+  }
+
+  .content{
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transform: scale(1);
+  }
+
+  .wrapper.active-popup{
+      transform: scale(1);
+  }
+
+  .wrapper.active{
+      height: 410px;
+  }
+
+
+  .wrapper .form-box.login{
+      position: absolute;
+      transform: translateX(0);
+  }
+
+  .wrapper .form-box.register{
+      position: absolute;
+      transform: translateX(400px);
+      
+  }
+
+  .wrapper .user-admin{
+      position: relative;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  }
+
+
+  .wrapper.active-admin{
+      height: 400px;
+  }
+
+  .form-box h2{
+      color: whitesmoke;
+      margin-bottom: 15px;
+      font-family: 'Merienda';
+      font-size: 1.5em;
+      text-align: center;
+  }
+
+  .input-box{
+      position: relative;
+      width: 100%;
+      height: 50px;
+      border-bottom: 2px solid #ccc;
+      margin: 15px 0;
+  }
+
+
+  .input-box label{
+      position: absolute;
+      top: 50%;
+      left: 5px;
+      transform: translateY(-50%);
+      color: #ccc;
+      font-size: 0.9em;
+      font-weight: 500;
+      transition: .3s;
+      pointer-events: none;
+  }
+
+  .input-box input:focus~label,
+  .input-box input:valid~label{
+      top: -5px;
+  }
+
+
+  .input-box .icon{
+      color: #ccc;
+      position: absolute;
+      top: 50%;
+      right: 5px;
+      transform: translateY(-50%);
+      pointer-events: none;
+      font-size: 0.9em;
+      line-height: 35px;
+  }
+
+  .remember-forgot{
+      color: #ccc;
+      margin: -10px 0 10px;
+      font-size: 0.7em;
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+  }
+
+  .remember-forgot label input{
+      accent-color: #ccc;
+      margin-right: 3px;
+  }
+
+
+  .form-box .btn{
+      margin-top: 13px;
+      width: 100%;
+      height: 35px;
+      font-family: 'Merienda';
+      background: transparent;
+      border: 1px solid #ccc;
+      outline: none;
+      border-radius: 7px;
+      color:rgb(224, 224, 224);
+      font-size: 1.00em;
+      font-weight: 500;
+      cursor: pointer;
+  }
+
+
+.login-register{
+    color: #ccc;
+    font-size: 0.7em;
+    font-weight: 500;
+    text-align: center;
+    margin: 23px 0 0;
+}
+
+
+  .wrapper .icon-close{
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 35px;
+      height: 35px;
+      border: 1.2px solid #ccc;
+      border-bottom-left-radius: 20px; ;
+      color: white;
+      font-size: 1.50em;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+
+  .user-admin {
+    flex-direction: grid;
+    font-size: 0.7em
+  }
+
+  .user-admin .vl{
+      border-left: 0.1rem solid whitesmoke;
+      height: 25px;
+      position: absolute;
+      left: 50%;
+      margin-left: -3px;
+      top: 0;
+      z-index: 1;
+
+  }
+
+  #features {
+    flex-direction: column;
+    padding: 20px;
+    align-items: center;
+  }
+
+  #features h2 {
+    font-size: 3em;
+    text-align: center;
+    margin-left: 0;
+  }
+
+  #features .cards {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  #features .cards .card {
+    width: 250px;
+    height: 150px;
+  }
+
+  #features .cards .card::before{
+    width: 100%;
+    height: 100%   
+  }
+
+  #features .cards .card ion-icon {
+    font-size: 1.5em;
+    margin: 10px auto 10px;
+    display: block;
+  }
+
+  #features .card h3 {
+    font-size: 2em;
+    margin-top: 10px;
+  }
+
+  #subscription {
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+
+  #subscription .card {
+    width: 90%;
+    margin: 20px 0;
+    margin-right: 15%;
+    height: auto;
+    transform: scale(1);
+  }
+
+  #subscription .card-title{
+    margin-top: 5%;
+  }
+
+  #subscription .card-price,
+  #subscription .card-features,
+  #subscription .card-btn {
+    position: static;
+    transform: none;
+    margin: 20px auto;
+  }
+
+  .footer-links,
+  .footer-social {
+    align-items: center;
+    gap: 10px;
+  }
+
+  .footer-newsletter {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footer-newsletter input[type="email"],
+  .footer-newsletter button {
+    width: 90%;
+  }
+
+  #footer {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+  }
+}
+
+.logo img{
+    width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: bold;
+}
