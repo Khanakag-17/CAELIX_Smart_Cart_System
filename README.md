@@ -105,88 +105,179 @@ CAELIX_Smart_Cart/
 │   └── style.css                  # Shared styles for landing page
 
 ```
+## 🔧 CAELIX | Components Breakdown
 
-## 🔧 Components Overview
+  *Explore the heartbeat of CAELIX – where intelligent hardware, real-time vision models, and sleek interfaces converge to deliver seamless smart cart shopping.*
 
-### Backend Services
+### 🧠 Backend Intelligence
+────────────────────────────
 
-#### `detection_worker.py`
-- Handles real-time object detection for individual shopping carts
-- Implements multithreading for concurrent cart monitoring
-- Integrates with YOLOv8 models for product identification
+#### 📦 `detection_worker.py` — Cart Vision in Motion  
+- Powers **real-time object detection** using **YOLOv8**
+- **Multithreaded** to handle multiple carts simultaneously  
+- Fuses **visual data with weight sensor input** for fraud-proof detection
 
-#### `manager.py`
-- Manages multiple detection threads based on cart activity
-- Coordinates resource allocation across active carts
-- Handles cart lifecycle management
 
-#### `smart_cart_detection.py`
-- Standalone detection script for testing and development
-- Contains core detection algorithms and image processing logic
-- Supports both single and batch processing modes
+#### 🔁 `manager.py` — Cart Orchestrator  
+- Monitors the **state of every cart**
+- Dynamically manages **detection threads** based on cart usage  
+- Designed for **scalable multi-cart deployments**
 
-### Frontend Pages
 
-#### `landing_page.html`
-- Main entry point with user authentication
-- Supports both customer and administrator login
-- Responsive design with modern UI elements
+#### 🌐 `flask_server_app.py` — Arduino Link & Firebase Relay  
+- Interfaces with **ESP32/Arduino-based cart hardware**  
+- Captures **live weight data** from **load cells** via serial input  
+- Sends validated readings to **Firebase** for centralized monitoring
 
-#### `dashboard.html`
-- Comprehensive admin dashboard for system monitoring
-- Real-time analytics and cart activity visualization
-- User management and system configuration tools
 
-#### `user_dash.html`
-- Customer interface for cart management
-- Wallet balance display and transaction history
-- Interactive product scanning interface
+### ⚙️ Embedded Hardware Layer
+────────────────────────────
 
-#### `wallet_gateway.html`
-- Secure payment processing interface
-- Multiple payment method support
-- Transaction confirmation and receipt generation
+#### 🛠️ `sketch.ino` — Cart-Embedded Brain  
+- Interfaces with **load cells via HX711** modules  
+- Transmits **live weight readings** to the backend  
+- Handles **calibration, taring**, and **hardware fault detection**
+
+
+### 🖥️ Frontend Interfaces
+────────────────────────────
+
+
+#### 🚪 `landing_page.html` — Your Entry to CAELIX  
+- Dual login for **Users** and **Admins**  
+- Clean, **responsive UI** with animated transitions  
+- Enables **smart cart pairing via QR scan**
+
+
+#### 👤 `user_dash.html` — Shopper Control Center  
+- Displays **wallet balance**, current cart, and history  
+- Shows **scanned product list** in real-time  
+- One-click access to **digital receipts**
+
+
+#### 📷 `barcode.html` — Cart-Side Scanner  
+- Scans **item barcodes** using the cart’s embedded scanner  
+- Sends data to backend for **YOLOv8 vision + weight fusion validation**  
+- Designed for **kiosk displays** and responsive updates
+
+
+#### 💳 `checkout.html` — Exit Protocol  
+- Shows a **final list of all scanned items** with pricing  
+- Starts **secure checkout** via wallet or UPI  
+- Automatically generates and stores **digital receipts**
+
+
+#### 💰 `wallet_gateway.html` — Add Money Interface  
+- Allows users to **top up their balance** via multiple methods  
+- Logs every transaction for **audit and transparency**  
+- Supports **cards, UPI, and offline integration** if needed
+
+
+#### 🧭 `dashboard.html` — Admin Mission Control  
+- Displays **real-time cart activity** and scanned item logs  
+- Alerts admins for **possible theft or item mismatch**  
+- Offers **analytics** on product trends and cart usage
+
+
+*Modular by design. CAELIX grows with your store — scale carts, plug in new detection models, or sync with ERP systems effortlessly.*
+
 
 ## 🛠️ Installation & Setup
 
-### Prerequisites
-- Python 3.8 or higher
-- Modern web browser (Chrome, Firefox, Safari, Edge)
-- Firebase account with Firestore database
-- Webcam or camera for product detection
+Set up **CAELIX Smart Cart System** locally with the following steps.  
+*This guide assumes you're using **Python for the backend**, **Firebase for data handling**, and **HTML for the frontend interface**.*
 
-### Backend Setup
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd smart-cart-system
-   ```
+### 📦 Prerequisites
+⸻⸻⸻⸻⸻
 
-2. **Install Python dependencies**
-   ```bash
-   pip install opencv-python ultralytics firebase-admin scikit-learn numpy torch torchvision
-   ```
+Ensure the following are ready before you begin:
+
+- ✅ **Python 3.8 or higher**
+- ✅ **Modern Web Browser** (Chrome, Firefox, Safari, or Edge)
+- ✅ **Firebase Project** with Firestore & Realtime Database enabled
+- ✅ **Webcam or USB Camera** for object detection
+
+
+### ⚙️ Backend Setup
+⸻⸻⸻⸻⸻⸻
+
+
+1. **Clone the Repository**
+    ```bash
+    git clone https://github.com/Khanakag-17/CAELIX_Smart_Cart_System.git
+    cd CAELIX_Smart_Cart_System
+    ```
+
+2. **Install Required Python Libraries**
+    ```bash
+    pip install requirements.txt
+    ```
 
 3. **Configure Firebase**
-   - Create a Firebase project at [Firebase Console](https://console.firebase.google.com)
-   - Generate a service account key
-   - Download the JSON file and save it as `backend/config/serviceAccountKey.json`
+    - Go to the [Firebase Console](https://console.firebase.google.com) and **create a new project**.
+    - Navigate to **Project Settings → Service Accounts** and click **Generate new private key**.
+    - Download the `.json` file and save it as:
+      ```plaintext
+      CAELIX_Theft_Detectors/Weight Sensor/SmartCart/serviceAccountKey.json
+      ```
+    - Replace **// Your Firebase configuration** with the generated API.
 
 4. **Model Setup**
-   - The `yolov8n.pt` model will be downloaded automatically
-   - Place your custom trained model as `model_single.pt` in the `backend/models/` directory
-   - Update model paths in configuration files if needed
+    - The **default YOLOv8n model** (`yolov8n.pt`) will be automatically downloaded at runtime.
+    - To use our **custom-trained grocery model**, download it from:  
+      👉 [Custom Model (Kaggle)](https://www.kaggle.com/models/khanakagrawal/grocery-detector)
+    - Save it in:
+      ```plaintext
+      CAELIX_Theft_Detectors/Product Detector/model_final.pt
+      ```
+    - *If required, update model paths in your detection scripts accordingly.*
 
-### Frontend Setup
+5. **Object Detection Dataset & Training Code**
+    - 📂 Dataset used: [Grocery Items Dataset on Roboflow](https://universe.roboflow.com/productcv/grocery-items-rvvcm)
+    - 📘 Model training: [Multi-Class Grocery Detector – 95% Precision (Kaggle)](https://www.kaggle.com/code/khanakagrawal/multi-class-grocery-detector-95-precision)
+  
+6. **Weight Tracking with Load Cell & Arduino (ESP32)**
+    - A dedicated Python script (`flask_server_app.py`) handles **Wi-Fi communication** with an **ESP32** board connected to **HX711 and Load Cells**.
+    - The script:
+        - Receives **real-time weight data** from ESP32 over Wi-Fi.
+        - Sends updates to the **Firebase Realtime Database**.
+    - Ensure you:
+        - Flash your ESP32 with the correct `sketch.ino` that sends weight via Wi-Fi.
+        - Connect ESP32 and your local machine (running `flask_server_app.py`) to the **same Wi-Fi network**.
+        - Run the script after powering the ESP32 to start syncing weight data.
 
-1. **Start the application**
-   - Open `frontend/pages/landing_page.html` in your web browser
-   - No additional server setup required for basic functionality
+    - 📍 Sample wiring:
+      ```plaintext
+      Load Cell      → HX711 → ESP32
+      -----------------------------------
+      Red (E+)       → E+    → 3.3V
+      Black (E-)     → E-    → GND
+      Green (A+)     → A+    → 
+      White (A-)     → A-    → 
+                     → DT   → GPIO 4
+                     → SCK  → GPIO 5
+      ```
 
-2. **For development with live server**
-   - Use a local development server (Live Server extension in VS Code recommended)
-   - Ensure proper CORS settings for Firebase integration
+
+### 🌐 Frontend Setup
+⸻⸻⸻⸻⸻⸻
+
+
+1. **Launch the Web Interface**
+    - Open this file in your browser:
+      ```plaintext
+      CAELIX_Smart_Cart/CAELIX_UI/landing_page.htm
+      ```
+    - *This will allow access to both **User** and **Admin** dashboards.*
+
+2. **(Optional) Development Mode**
+    - Use **Live Server** extension in VS Code or a local HTTP server for live previews.
+    - Ensure **CORS settings** are correctly configured in Firebase to support local testing.
+
+
+_You're now ready to explore the smart cart ecosystem — real-time vision meets seamless shopping!_ 🛒✨
+
 
 ## 🧭 How to Use CAELIX
 
@@ -216,7 +307,7 @@ Once done shopping, tap **Proceed to Payment**.
 A **digital receipt** is generated immediately post-payment.  
 → View all transaction history directly from your User Dashboard.
 
----
+────────────────────────────────────────────────────────
 
 ### 🛠️ For Administrators
 
