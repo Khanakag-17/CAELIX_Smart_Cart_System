@@ -4,21 +4,46 @@
 [![YOLOv8](https://img.shields.io/badge/YOLOv8-Object%20Detection-green.svg)](https://github.com/ultralytics/ultralytics)
 [![Firebase](https://img.shields.io/badge/Firebase-Backend-orange.svg)](https://firebase.google.com)
 [![HTML5](https://img.shields.io/badge/HTML5-Frontend-red.svg)](https://html.spec.whatwg.org/)
+[![CSS3](https://img.shields.io/badge/CSS3-Styling-blue.svg)](https://developer.mozilla.org/en-US/docs/Web/CSS)
+[![JavaScript](https://img.shields.io/badge/JavaScript-Frontend-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![IoT](https://img.shields.io/badge/IoT-Embedded-lightgrey.svg)](https://en.wikipedia.org/wiki/Internet_of_things)
+[![Arduino](https://img.shields.io/badge/Arduino-ESP32-00979D.svg)](https://www.arduino.cc/)
+[![Flask](https://img.shields.io/badge/Flask-Microframework-black.svg)](https://flask.palletsprojects.com/)
 
-A comprehensive smart shopping cart system designed for Walmart retail environments, featuring real-time object detection, user management, and integrated payment gateway solutions.
 
-## 🚀 Features
+## 🚀 CAELIX: The Next-Gen Smart Cart System
+   *Say goodbye to long queues, manual billing, and retail theft.*
 
-- **Real-time Object Detection**: Advanced YOLOv8-based product recognition
-- **Multi-threaded Cart Management**: Concurrent handling of multiple shopping carts
-- **User Authentication**: Secure login system for customers and administrators
-- **Payment Integration**: Digital wallet and payment gateway functionality
-- **Admin Dashboard**: Comprehensive analytics and monitoring interface
-- **Responsive Design**: Mobile-friendly web interface
-- **Firebase Integration**: Cloud-based data storage and real-time synchronization
-- **Chatbot Support**: Interactive customer assistance
+**CAELIX** is an intelligent, IoT-powered retail cart system that combines real-time object detection, weight verification, and interactive dashboards to revolutionize the in-store shopping experience. Built using YOLOv8, Firebase, and ESP32 sensors, CAELIX empowers both customers and store managers with seamless checkout, theft detection, and insightful cart analytics — all in one sleek ecosystem.
 
-## 📁 Project Structure
+## ✨ Key Features
+
+- **⚡ Instant Product Detection**  
+  YOLOv8-powered object detection for fast, accurate recognition of store products.
+
+- **🧠 Smart Cart Management**  
+  Multi-threaded system that manages multiple carts with integrated theft detection.
+
+- **🔐 Role-Based Authentication**  
+  Firebase-secured login system with user and admin access levels.
+
+- **💳 Seamless Checkout Experience**  
+  Integrated digital wallet and payment gateway for hassle-free billing.
+
+- **📊 Dynamic Admin Dashboard**  
+  Real-time cart monitoring, usage analytics, and activity logs for store administrators.
+
+- **📱 Responsive UI Design**  
+  Mobile-optimized web interfaces for users, admins, and the live cart view.
+
+- **☁️ Firebase Cloud Backend**  
+  Real-time database syncing and secure data storage with Firestore.
+
+- **🤖 AI Chatbot Support**  
+  Built-in conversational assistant for customer support and guidance.
+
+
+## 🧩 Codebase Layout
 
 ```
 CAELIX_Smart_Cart/
@@ -163,31 +188,86 @@ CAELIX_Smart_Cart/
    - Use a local development server (Live Server extension in VS Code recommended)
    - Ensure proper CORS settings for Firebase integration
 
-## 🚀 Usage Guide
+## 🧭 How to Use CAELIX
 
-### For Customers
+### 👤 For Customers
 
-1. **Login**: Access the system through the landing page
-2. **Cart Selection**: Choose an available smart cart
-3. **Shopping**: Add items to your cart - they'll be detected automatically
-4. **Payment**: Use the integrated wallet system for seamless checkout
-5. **Receipt**: View transaction history and receipts
+#### 🔐 Sign In  
+Access the system via `landing_page.html`  
+→ Select **User Login** to enter your personalized dashboard.
 
-### For Administrators
+#### 🛒 Pick Your Smart Cart  
+Scan the **QR code** on your chosen smart cart using your mobile device.  
+→ This links the physical cart to your digital profile.
 
-1. **Admin Login**: Use administrator credentials on the landing page
-2. **Dashboard**: Monitor active carts and system performance
-3. **User Management**: Add/remove users and manage permissions
-4. **Analytics**: View sales data and system usage statistics
-5. **Configuration**: Adjust detection sensitivity and system settings
+#### 📦 Start Shopping  
+Scan product **barcodes** using the built-in cart scanner (`barcode.html`).  
+→ The system validates items using **YOLOv8 object detection** + **load cell weight verification**.
+
+#### 💼 Wallet Management  
+Add funds securely via the **Add Money** option (`wallet_gateway.html`).  
+→ Track your available balance and past top-ups on your dashboard.
+
+#### 💳 Checkout & Payment  
+Once done shopping, tap **Proceed to Payment**.  
+→ The system automatically verifies that all items are scanned and paid for.
+
+#### 🧾 Get Receipt  
+A **digital receipt** is generated immediately post-payment.  
+→ View all transaction history directly from your User Dashboard.
+
+---
+
+### 🛠️ For Administrators
+
+#### 🔐 Admin Login  
+Log in via `landing_page.html` using admin credentials.  
+→ This grants access to the Admin Dashboard (`dashboard.html`).
+
+#### 📡 Live Cart Monitoring  
+Track **real-time activity** of all smart carts:  
+→ Item scans, total weight, and shopping session duration.
+
+#### 💲 Sales Overview  
+Access **detailed analytics** including:  
+→ Daily, weekly, and monthly sales data  
+→ Cart-wise revenue distribution
+
+#### 🚨 Theft Detection Alerts  
+Get **instant alerts** triggered by potential theft behavior:  
+→ YOLOv8 + weight mismatch detection flags unauthorized actions.
+
+#### 📊 Cart Status Overview  
+Monitor the **operational status** of all carts:  
+→ Active, idle, under maintenance, or disconnected.
+
+#### 📦 Live Inventory  
+View and manage live product inventory:  
+→ Critical stock alerts, category-wise breakdowns, and refill recommendations.
+
+#### 📷 Camera Monitor  
+Access **live cart camera feeds** in real-time:  
+→ Visual monitoring of cart content and user interaction.
+
 
 ## 🔄 Navigation Flow
 
 ```
-landing_page.html (Login)
-    ├── User Login → user_dash.html
-    │   └── Add Money → wallet_gateway.html
-    └── Admin Login → dashboard.html
+landing_page.html  (🔐 Login Page)
+├── User Login → user_dash.html  (👤 User Dashboard)
+│   ├── Add Money → wallet_gateway.html  (💳 Digital Wallet)
+│   └── Start Shopping → barcode.html  (🛒 Live Cart Scanner)
+│       └── Scan Items (YOLOv8 + Load Cell)
+│       └── Proceed to Checkout → checkout.html  (🧾 View & Confirm Cart)
+│           └── Pay via Wallet → Loyalty Points & Tier updation  (💰 Transaction)
+│           └── Redirect → user_dash.html  (🏠 Dashboard)
+└── Admin Login → dashboard.html  (🛠️ Admin Control Panel)
+    ├── Live Cart Monitoring  (📡 Real-time cart activity)
+    ├── Sales Overview  (💲 Monthly/Weekly/Daily Analytics)
+    ├── Theft Detection Alerts  (🚨 YOLOv8 + Weight-based detection)
+    ├── Cart Status Overview  (📊 Active/Idle cart metrics)
+    ├── Live Inventory  (📦 Critical stock flagging & Complete overview)
+    └── Camera Monitor  (📷 Cart camera response monitor)
 ```
 
 ## 📊 System Architecture
