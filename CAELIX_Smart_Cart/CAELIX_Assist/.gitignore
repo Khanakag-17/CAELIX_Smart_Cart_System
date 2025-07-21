@@ -1,0 +1,118 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Rasa specific files
+.rasa/
+models/*.tar.gz
+!models/.gitkeep
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs and temporary files
+*.log
+logs/
+temp/
+tmp/
+.tmp/
+
+# Firebase and sensitive credentials
+serviceAccountKey.json
+credentials.yml
+!**/credentials.yml.example
+
+# Environment variables and secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+secrets/
+config/secrets/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb
+
+# Node.js (if using any npm packages)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Operating System
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Backup files
+*.bak
+*.backup
+*.old
+*~
+
+# Temporary requirements files
+requirements_new.txt
+requirements_old.txt
+requirements_minimal.txt
+
+# Test coverage
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
+coverage.xml
+
+# Documentation builds
+docs/_build/
+site/
+
+# Large model files (optional - uncomment if models are too large)
+# models/
+# *.tar.gz
+
+# User-specific training data (if sensitive)
+# data/user_data/
+# data/conversations/
