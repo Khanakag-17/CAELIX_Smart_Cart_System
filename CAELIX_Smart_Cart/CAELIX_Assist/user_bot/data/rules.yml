@@ -1,0 +1,91 @@
+version: "3.1"
+
+rules:
+  - rule: Say hi
+    steps:
+      - intent: greet
+      - action: utter_greet
+
+  - rule: Say goodbye
+    steps:
+      - intent: goodbye
+      - action: utter_goodbye
+
+  - rule: Say thankyou
+    steps:
+      - intent: gratitude
+      - action: utter_gratitude
+
+  # Cart Related Rules
+  - rule: Respond to cart query
+    steps:
+      - intent: check_cart
+      - action: utter_check_cart
+
+  - rule: Respond to purchase history
+    steps:
+      - intent: check_history
+      - action: utter_check_history
+
+  - rule: Scanner help
+    steps:
+      - intent: scanner_help
+      - action: utter_scanner_help
+
+  - rule: Explain live cart
+    steps:
+      - intent: live_cart_explanation
+      - action: utter_live_cart_explanation
+
+  - rule: Remove item
+    steps:
+      - intent: remove_cart_item
+      - action: utter_remove_cart_item
+
+  - rule: Place order
+    steps:
+      - intent: place_order
+      - action: utter_place_order
+
+  - rule: Scanner issue
+    steps:
+      - intent: scanner_not_working
+      - action: utter_scanner_not_working
+
+  - rule: Total cart price
+    steps:
+      - intent: total_cart_price
+      - action: utter_total_cart_price
+
+  - rule: View invoice
+    steps:
+      - intent: view_invoice
+      - action: utter_view_invoice
+
+  - rule: Logout process
+    steps:
+      - intent: logout_process
+      - action: utter_logout_process
+
+  - rule: Update profile
+    steps:
+      - intent: update_profile
+      - action: utter_update_profile
+
+  - rule: Payment help
+    steps:
+      - intent: payment_help
+      - action: utter_payment_help
+
+  - rule: Platform safety
+    steps:
+      - intent: platform_safety
+      - action: utter_platform_safety
+
+  # Custom Rules
+  - rule: Respond to wallet balance
+    steps:
+      - intent: get_wallet_balance
+      - action: action_set_wallet_balance
+      - action: utter_wallet_balance
+

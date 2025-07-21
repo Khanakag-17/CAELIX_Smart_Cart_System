@@ -1,0 +1,79 @@
+version: "3.1"
+nlu:
+
+- intent: greet
+  examples: |
+    - hello
+    - hi admin bot
+    - hey
+    - good morning
+
+- intent: view_sales
+  examples: |
+    - show today's sales
+    - view revenue
+    - give me sales report
+    - total income for today
+
+- intent: add_product
+  examples: |
+    - how do I add a new product
+    - add a product
+    - help me add product to inventory
+    - insert a new item
+
+- intent: update_stock
+  examples: |
+    - update stock for product 101
+    - set item 4 to 30 units
+    - change quantity of item 5
+
+- intent: monitor_carts
+  examples: |
+    - how to monitor user carts
+    - track carts in real time
+    - monitor cart activity
+    - view user carts live
+
+- intent: notify_low_stock
+  examples: |
+    - how will I know if stock is low
+    - notify low stock
+    - alert me for low inventory
+
+- intent: manage_discounts
+  examples: |
+    - add a 10% discount
+    - how to give offer
+    - create a discount offer
+
+- intent: view_user_sessions
+  examples: |
+    - show active sessions
+    - who is online now
+    - see current users
+
+- intent: check_product_status
+  examples: |
+    - check item 12 status
+    - is item 5 available
+    - is product 17 out of stock
+
+- intent: goodbye
+  examples: |
+    - bye
+    - see you later
+    - thank you admin bot
+
+# Custom Intents
+- intent: show_cart_alerts
+  examples: |
+    - Show me the latest cart alerts
+    - Any unscanned or missing items?
+    - Give me cart log alerts
+    - Show detected problems in cart
+
+- intent: alerts_admin
+  examples: |
+    - Tell about alerts
+    - Alerts

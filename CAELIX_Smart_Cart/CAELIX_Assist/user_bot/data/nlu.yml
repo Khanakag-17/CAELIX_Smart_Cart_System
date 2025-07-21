@@ -1,0 +1,109 @@
+version: "3.1"
+
+nlu:
+- intent: greet
+  examples: |
+    - hello
+    - hi
+    - hey
+    - good morning
+
+- intent: goodbye
+  examples: |
+    - bye
+    - goodbye
+    - see you later
+
+- intent: gratitude
+  examples: |
+    - thank you
+    - Thank You
+
+#Cart Related Intents
+- intent: check_cart
+  examples: |
+    - what's in my cart
+    - show my cart
+    - check cart items
+    - want help with cart
+
+- intent: check_history
+  examples: |
+    - show my purchase history
+    - past orders
+    - what did I buy
+
+- intent: scanner_help
+  examples: |
+    - how do I scan products
+    - help with barcode scanner
+    - scanner not working
+
+- intent: live_cart_explanation
+  examples: |
+    - explain the live cart
+    - how does the live cart work
+    - what is live cart mechanism
+    - how is my cart updated
+
+- intent: remove_cart_item
+  examples: |
+    - how can I remove an item from my cart
+    - delete a product from cart
+    - remove product
+
+- intent: place_order
+  examples: |
+    - how to place an order
+    - complete my purchase
+    - checkout process
+
+- intent: scanner_not_working
+  examples: |
+    - scanner is not working
+    - barcode not scanning
+    - problem with barcode scanner
+
+- intent: total_cart_price
+  examples: |
+    - what's the total price in my cart
+    - total cost of items
+    - how much is my cart worth
+
+- intent: view_invoice
+  examples: |
+    - where is my invoice
+    - can I view my bill
+    - show my receipt
+
+- intent: logout_process
+  examples: |
+    - how to logout
+    - sign out
+    - exit my account
+
+- intent: update_profile
+  examples: |
+    - how can I update my profile
+    - change my personal info
+    - update account details
+
+- intent: payment_help
+  examples: |
+    - what are the payment options
+    - can I pay via UPI
+    - how to pay
+
+- intent: platform_safety
+  examples: |
+    - is this platform safe
+    - will my data be secure
+    - is shopping here safe
+
+# Custom Action
+- intent: get_wallet_balance
+  examples: |
+    - what is my wallet balance?
+    - check my wallet
+    - how much money do I have?
+    - wallet_balance_request:1200

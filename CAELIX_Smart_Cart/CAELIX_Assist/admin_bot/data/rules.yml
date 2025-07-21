@@ -1,0 +1,63 @@
+version: "3.1"
+rules:
+
+- rule: Greet the admin
+  steps:
+    - intent: greet
+    - action: utter_greet
+
+- rule: View sales data
+  steps:
+    - intent: view_sales
+    - action: utter_view_sales
+
+- rule: Add product
+  steps:
+    - intent: add_product
+    - action: utter_add_product
+
+- rule: Update stock
+  steps:
+    - intent: update_stock
+    - action: utter_update_stock
+
+- rule: Monitor carts
+  steps:
+    - intent: monitor_carts
+    - action: utter_monitor_carts
+
+- rule: Notify low stock
+  steps:
+    - intent: notify_low_stock
+    - action: utter_notify_low_stock
+
+- rule: Manage discounts
+  steps:
+    - intent: manage_discounts
+    - action: utter_manage_discounts
+
+- rule: View user sessions
+  steps:
+    - intent: view_user_sessions
+    - action: utter_view_user_sessions
+
+- rule: Check product status
+  steps:
+    - intent: check_product_status
+    - action: utter_check_product_status
+
+- rule: End conversation
+  steps:
+    - intent: goodbye
+    - action: utter_goodbye
+
+# Custom Rules
+- rule: Respond to cart alert request
+  steps:
+    - intent: show_cart_alerts
+    - action: action_fetch_cart_alerts
+
+- rule: Respond to cart Alerts
+  steps:
+    - intent: alerts_admin
+    - action: utter_alerts_admin

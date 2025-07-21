@@ -1,0 +1,87 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - gratitude
+  - check_cart
+  - check_history
+  - scanner_help
+  - live_cart_explanation
+  - remove_cart_item
+  - place_order
+  - scanner_not_working
+  - total_cart_price
+  - view_invoice
+  - logout_process
+  - update_profile
+  - payment_help
+  - platform_safety
+  - get_wallet_balance
+
+actions:
+  - action_set_wallet_balance
+
+slots:
+  wallet_amount:
+    type: text
+    mappings:
+      - type: custom
+
+responses:
+  utter_greet:
+    - text: "Hello! How can I assist you with your shopping today?"
+
+  utter_goodbye:
+    - text: "Goodbye! Happy shopping!"
+
+  utter_gratitude:
+    - text: "It was a pleasure helping you."
+
+#Replies for Carts
+  utter_check_cart:
+    - text: "Your cart contains the items you've scanned so far. Open the cart section to view or edit them."
+
+  utter_check_history:
+    - text: "You can view your purchase history by going to the 'History' tab on your dashboard."
+
+  utter_scanner_help:
+    - text: "To scan a product, simply use the scanner and the item will be added to your cart automatically."
+
+  utter_live_cart_explanation:
+    - text: "The live cart updates automatically whenever you scan a product. You don’t need to refresh — it reflects all changes in real-time."
+
+  utter_remove_cart_item:
+    - text: "You can remove any item from your cart by tapping the delete icon next to the product in the cart section."
+
+  utter_place_order:
+    - text: "To place your order, go to your cart and tap on 'Checkout'. Follow the instructions to complete your purchase."
+
+  utter_scanner_not_working:
+    - text: "If your scanner isn’t working, try refreshing or check your camera permissions. You can also add items manually."
+
+  utter_total_cart_price:
+    - text: "The total price is displayed at the bottom of your cart. It updates automatically with each item added or removed."
+
+  utter_view_invoice:
+    - text: "You can view your invoice in the 'Purchase History' section. Each order has a downloadable receipt."
+
+  utter_logout_process:
+    - text: "To logout, tap the profile icon on the top right and choose 'Logout'. You’ll be signed out immediately."
+
+  utter_update_profile:
+    - text: "To update your profile, go to the Profile section and click on 'Edit Info'. Save your changes before exiting."
+
+  utter_payment_help:
+    - text: "We support UPI, credit/debit cards, and COD. You can choose your preferred option during checkout."
+
+  utter_platform_safety:
+    - text: "Yes, our platform uses encrypted sessions and secure storage to keep your data safe. We value your privacy."
+
+  utter_wallet_balance:
+    - text: "Your current wallet balance is ₹{wallet_amount}."
+
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true

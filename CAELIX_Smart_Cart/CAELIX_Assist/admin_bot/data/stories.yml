@@ -1,0 +1,7 @@
+version: "3.1"
+
+stories:
+- story: cart alert flow
+  steps:
+    - intent: check_cart_alerts
+    - action: action_fetch_cart_alerts

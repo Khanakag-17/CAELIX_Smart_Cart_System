@@ -1,0 +1,59 @@
+version: "3.1"
+
+intents:
+  - greet
+  - view_sales
+  - add_product
+  - update_stock
+  - monitor_carts
+  - notify_low_stock
+  - manage_discounts
+  - view_user_sessions
+  - check_product_status
+  - goodbye
+  - show_cart_alerts
+  - alerts_admin
+
+actions:
+  - action_fetch_cart_alerts
+
+responses:
+  utter_greet:
+    - text: "Hello Admin! How can I assist you today?"
+
+  utter_view_sales:
+    - text: "Today's total sales are ₹23,000 across 58 transactions."
+
+  utter_add_product:
+    - text: "To add a new product, go to Inventory > Add Item, fill in the product details, and click 'Save'."
+
+  utter_update_stock:
+    - text: "You can update stock under Inventory > Product List > Edit Quantity."
+
+  utter_monitor_carts:
+    - text: "You can monitor user carts live from the Admin Dashboard > Live Carts. It shows users, items in cart, and timestamp of last scan."
+
+  utter_notify_low_stock:
+    - text: "You will be notified automatically when any product falls below the minimum threshold defined in settings."
+
+  utter_manage_discounts:
+    - text: "To apply a discount, go to Offers > Create Discount and set the rules (e.g., 10% off on items above ₹500)."
+
+  utter_view_user_sessions:
+    - text: "There are currently 8 users logged in. You can see more details in Admin > Sessions."
+
+  utter_check_product_status:
+    - text: "Item 17 is in stock with 12 units. You can check all inventory stats under Product Status."
+
+  utter_goodbye:
+    - text: "Goodbye Admin! Have a great day!"
+
+  utter_no_alerts:
+    - text: "✅ No faulty carts found."
+
+  utter_alerts_admin:
+    - text: "There are total of 4 Alerts"
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
