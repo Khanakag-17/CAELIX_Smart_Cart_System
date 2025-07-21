@@ -289,6 +289,7 @@ Ensure the following are ready before you begin:
                      → DT   → GPIO 4
                      → SCK  → GPIO 5
       ```
+   - *For detailed hardwarw & server setup and customization, see `CAELIX_ASSIST/README.md`*
 
 7. **Setup CAELIX ASSIST Chatbot** *(Optional - for AI support)*
     ```bash
@@ -325,7 +326,7 @@ Ensure the following are ready before you begin:
 _You're now ready to explore the smart cart ecosystem — real-time vision meets seamless shopping!_ 🛒✨
 
 
-## 🧭 How to Use CAELIX
+## 🧭 Gudie to CAELIX
 
 ### 👤 For Customers
 
@@ -426,7 +427,7 @@ landing_page.html  (🔐 Login Page)
 
 ## 🔒 Security Features
 
-- Secure user authentication
+- Secure user authentication via Firebase Authentication
 - Encrypted payment processing
 - Firebase security rules
 - Input validation and sanitization
@@ -448,19 +449,6 @@ landing_page.html  (🔐 Login Page)
 - **Real-time Updates**: Live cart status and notifications
 - **Interactive Chatbot**: Customer support integration
 
-## 🔧 Configuration
-
-### Environment Variables
-Create a `.env` file in the root directory:
-```
-FIREBASE_PROJECT_ID=your-project-id
-FIREBASE_STORAGE_BUCKET=your-storage-bucket
-MODEL_PATH=backend/models/model_single.pt
-CONFIDENCE_THRESHOLD=0.5
-```
-
-### Firebase Configuration
-Update Firebase configuration in JavaScript files with your project credentials.
 
 ## 🐛 Troubleshooting
 
