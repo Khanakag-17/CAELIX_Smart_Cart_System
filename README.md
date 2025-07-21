@@ -39,8 +39,8 @@
 - **☁️ Firebase Cloud Backend**  
   Real-time database syncing and secure data storage with Firestore.
 
-- **🤖 AI Chatbot Support**  
-  Built-in conversational assistant for customer support and guidance.
+- **🤖 AI Chatbot Support - CAELIX ASSIST**  
+  Dual-mode conversational AI with **Rasa Framework** providing specialized support for both customers and administrators with real-time Firebase integration.
 
 
 ## 🧩 Codebase Layout
@@ -103,7 +103,30 @@ CAELIX_Smart_Cart/
 │   ├── landing_page.htm           # Initial landing page for the CAELIX system
 │   ├── script.js                  # General UI logic for landing page
 │   └── style.css                  # Shared styles for landing page
-
+│
+├── CAELIX_ASSIST/                   # AI Chatbot system
+│   ├── admin_bot/                   # Administrator chatbot
+│   │   ├── config.yml              # Rasa NLU/Core configuration for admin
+│   │   ├── domain.yml              # Admin intents, responses, and actions
+│   │   ├── credentials.yml         # Authentication for admin bot
+│   │   ├── endpoints.yml           # Action server endpoints
+│   │   ├── serviceAccountKey.json  # Firebase service account
+│   │   ├── actions/                # Custom admin actions
+│   │   ├── data/                   # Training data for admin bot
+│   │   └── models/                # Trained admin bot model
+│   │       └── admin_model.tar.gz
+│   ├── user_bot/                    # Customer support chatbot
+│   │   ├── config.yml              # Rasa configuration for user bot
+│   │   ├── domain.yml              # User intents, responses, and actions
+│   │   ├── credentials.yml         # User bot authentication
+│   │   ├── endpoints.yml           # User bot action endpoints
+│   │   ├── actions/                # Custom user actions
+│   │   ├── data/                   # User bot training data
+│   │   └── models/                # Trained user bot model
+│   │       └── user_model.tar.gz
+│   ├── chatbot_site/               # Web interface for chatbot
+│   ├── requirements.txt            # Python dependencies for chatbots
+│   └── README.md                   # Chatbot setup instructions
 ```
 ## 🔧 CAELIX | Components Breakdown
 
@@ -128,6 +151,12 @@ CAELIX_Smart_Cart/
 - Interfaces with **ESP32/Arduino-based cart hardware**  
 - Captures **live weight data** from **load cells** via serial input  
 - Sends validated readings to **Firebase** for centralized monitoring
+
+
+#### 🤖 `CAELIX_ASSIST` — AI Conversational Intelligence  
+- **Dual-mode chatbots** with specialized **User Support** and **Admin Management** capabilities
+- **Rasa-powered NLU** with real-time **Firebase integration** for live data access
+- **Proactive alert system** for theft detection, inventory management, and customer support
 
 
 ### ⚙️ Embedded Hardware Layer
@@ -197,6 +226,7 @@ Ensure the following are ready before you begin:
 - ✅ **Modern Web Browser** (Chrome, Firefox, Safari, or Edge)
 - ✅ **Firebase Project** with Firestore & Realtime Database enabled
 - ✅ **Webcam or USB Camera** for object detection
+- ✅ **Rasa Framework 3.6+** *(Optional - for AI chatbot support)*
 
 
 ### ⚙️ Backend Setup
@@ -220,6 +250,7 @@ Ensure the following are ready before you begin:
     - Download the `.json` file and save it as:
       ```plaintext
       CAELIX_Theft_Detectors/Weight Sensor/SmartCart/serviceAccountKey.json
+      CAELIX_ASSIST/admin_bot/serviceAccountKey.json  # For chatbot (if using)
       ```
     - Replace **// Your Firebase configuration** with the generated API.
 
@@ -258,6 +289,21 @@ Ensure the following are ready before you begin:
                      → DT   → GPIO 4
                      → SCK  → GPIO 5
       ```
+
+7. **Setup CAELIX ASSIST Chatbot** *(Optional - for AI support)*
+    ```bash
+    cd CAELIX_Smart_Cart/CAELIX_ASSIST
+    pip install -r requirements.txt
+    
+    # Train chatbot models
+    cd admin_bot && rasa train
+    cd ../user_bot && rasa train
+    
+    # Start chatbot servers (run in separate terminals)
+    cd admin_bot && rasa run --port 5005 --cors "*"
+    cd user_bot && rasa run --port 5006 --cors "*"
+    ```
+    - *For detailed chatbot setup and customization, see `CAELIX_ASSIST/README.md`*
 
 
 ### 🌐 Frontend Setup
@@ -307,6 +353,10 @@ Once done shopping, tap **Proceed to Payment**.
 A **digital receipt** is generated immediately post-payment.  
 → View all transaction history directly from your User Dashboard.
 
+#### 💬 AI Assistant Support *(Optional)*
+Access **CAELIX ASSIST** chatbot for instant help with shopping, payments, and technical support.  
+→ Available as a floating chat widget on all user pages.
+
 ────────────────────────────────────────────────────────
 
 ### 🛠️ For Administrators
@@ -340,6 +390,10 @@ View and manage live product inventory:
 Access **live cart camera feeds** in real-time:  
 → Visual monitoring of cart content and user interaction.
 
+#### 🤖 AI Admin Assistant *(Optional)*
+Access **CAELIX ASSIST** admin chatbot for instant insights, alerts, and system management support.  
+→ Provides proactive notifications and real-time data analysis.
+
 
 ## 🔄 Navigation Flow
 
@@ -366,8 +420,9 @@ landing_page.html  (🔐 Login Page)
 - **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
 - **Backend**: Python with OpenCV and YOLOv8
 - **Database**: Firebase Firestore
-- **AI/ML**: YOLOv8 for object detection
+- **AI/ML**: YOLOv8 for object detection, Rasa for conversational AI
 - **Payment**: Integrated wallet system
+- **Chatbot**: Dual-mode Rasa-powered assistant with Firebase integration
 
 ## 🔒 Security Features
 
@@ -383,6 +438,8 @@ landing_page.html  (🔐 Login Page)
 - **Custom Model Training**: Specific to retail products
 - **Multi-object Tracking**: Handles multiple items simultaneously
 - **Confidence Scoring**: Accuracy thresholds for reliable detection
+- **CAELIX ASSIST Chatbot**: Rasa-powered conversational AI with dual-mode support
+- **Natural Language Understanding**: Intent recognition and entity extraction for customer & admin support
 
 ## 🎨 UI/UX Features
 
