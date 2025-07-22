@@ -289,7 +289,7 @@ Ensure the following are ready before you begin:
                      → DT   → GPIO 4
                      → SCK  → GPIO 5
       ```
-   - *For detailed hardwarw & server setup and customization, see `CAELIX_ASSIST/README.md`*
+   - *For detailed hardwarw & server setup and customization, see `CAELIX_Theft_Detectors/Weight Sensor/SmartCart/README.md`*
 
 7. **Setup CAELIX ASSIST Chatbot** *(Optional - for AI support)*
     ```bash
