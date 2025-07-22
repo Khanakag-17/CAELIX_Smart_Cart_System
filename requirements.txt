@@ -1,0 +1,37 @@
+# Web backend
+flask
+
+# Firebase for data storage and admin control
+firebase-admin==6.5.0
+
+# Core Rasa dependencies for chatbot
+rasa==3.6.20
+rasa-sdk==3.6.2
+
+# HTTP requests and async communication
+requests==2.32.3
+aiohttp==3.10.5
+
+# Data handling
+PyYAML==6.0.2
+packaging==24.1
+
+# Development and debugging tools (optional)
+jupyter==1.1.1
+
+# Realtime communication and dashboard features (if applicable)
+flask-socketio==5.3.6
+eventlet==0.35.1
+
+# For cross-origin API access (if frontend/backend are separate)
+flask-cors==4.0.0
+
+# Sensor/Hardware interfacing (optional, in case of simulations or server-side logic)
+pyserial==3.5
+
+# JSON-based structured logging (good for server monitoring)
+python-json-logger==2.0.7
+
+# Additional async support and performance (optional)
+uvicorn==0.29.0
+fastapi==0.111.0
