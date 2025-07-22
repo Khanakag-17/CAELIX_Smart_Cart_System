@@ -14,9 +14,9 @@ SmartCart_Server/
 ├── serviceAccountKey.json       # Firebase Admin SDK credentials
 ```
 
-**serviceAccountKey.json Format**
+### serviceAccountKey.json Format
 
-```
+```json
 {
   "type": "service_account",
   "project_id": "PROJECT_ID",
@@ -31,9 +31,8 @@ SmartCart_Server/
   "universe_domain": "DOMAIN"
 }
 ```
-*This file can be installed from Firebase post web app creation*
 
----
+> *This file can be installed from Firebase post web app creation*
 
 ## ⚙️ Step-by-Step Setup
 
@@ -68,14 +67,13 @@ python flask_server_app.py
 ```
 
 You should see:
+
 ```
 ✅ Firebase initialized.
  * Running on http://<your-ip>:5000
 ```
 
-✅ Keep this terminal open and running while the system is active.
-
----
+> ✅ Keep this terminal open and running while the system is active.
 
 ### 🔹 5. Set ESP32 to Send Data to This Server
 
