@@ -243,8 +243,13 @@ Ensure the following are ready before you begin:
     ```bash
     pip install requirements.txt
     ```
+    OR
 
-3. **Configure Firebase**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+4. **Configure Firebase**
     - Go to the [Firebase Console](https://console.firebase.google.com) and **create a new project**.
     - Navigate to **Project Settings → Service Accounts** and click **Generate new private key**.
     - Download the `.json` file and save it as:
@@ -254,7 +259,7 @@ Ensure the following are ready before you begin:
       ```
     - Replace **// Your Firebase configuration** with the generated API.
 
-4. **Model Setup**
+5. **Model Setup**
     - The **default YOLOv8n model** (`yolov8n.pt`) will be automatically downloaded at runtime.
     - To use our **custom-trained grocery model**, download it from:  
       👉 [Custom Model (Kaggle)](https://www.kaggle.com/models/khanakagrawal/grocery-detector)
@@ -264,11 +269,11 @@ Ensure the following are ready before you begin:
       ```
     - *If required, update model paths in your detection scripts accordingly.*
 
-5. **Object Detection Dataset & Training Code**
+6. **Object Detection Dataset & Training Code**
     - 📂 Dataset used: [Grocery Items Dataset on Roboflow](https://universe.roboflow.com/productcv/grocery-items-rvvcm)
     - 📘 Model training: [Multi-Class Grocery Detector – 95% Precision (Kaggle)](https://www.kaggle.com/code/khanakagrawal/multi-class-grocery-detector-95-precision)
   
-6. **Weight Tracking with Load Cell & Arduino (ESP32)**
+7. **Weight Tracking with Load Cell & Arduino (ESP32)**
     - A dedicated Python script (`flask_server_app.py`) handles **Wi-Fi communication** with an **ESP32** board connected to **HX711 and Load Cells**.
     - The script:
         - Receives **real-time weight data** from ESP32 over Wi-Fi.
@@ -291,7 +296,7 @@ Ensure the following are ready before you begin:
       ```
    - *For detailed hardwarw & server setup and customization, see `CAELIX_Theft_Detectors/Weight Sensor/SmartCart/README.md`*
 
-7. **Setup CAELIX ASSIST Chatbot** *(Optional - for AI support)*
+8. **Setup CAELIX ASSIST Chatbot** *(Optional - for AI support)*
     ```bash
     cd CAELIX_Smart_Cart/CAELIX_ASSIST
     pip install -r requirements.txt
