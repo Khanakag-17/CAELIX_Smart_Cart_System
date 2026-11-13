@@ -1,0 +1,5 @@
+# CAELIX Assist — Rasa chatbots
+# Rasa 3.6 requires Python 3.8-3.10. It will not install on 3.11+.
+rasa==3.6.20
+rasa-sdk==3.6.2
+firebase-admin==6.5.0

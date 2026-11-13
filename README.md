@@ -1,472 +1,339 @@
 # CAELIX 🛒
 
-[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
+**Frictionless Checkout Smart Cart** — a multi-modal self-checkout system that cross-verifies barcode scans, cart weight, and computer-vision detections to catch mis-scans and shrinkage.
+
+[![Python](https://img.shields.io/badge/Python-3.9--3.10-blue.svg)](https://python.org)
 [![YOLOv8](https://img.shields.io/badge/YOLOv8-Object%20Detection-green.svg)](https://github.com/ultralytics/ultralytics)
-[![Firebase](https://img.shields.io/badge/Firebase-Backend-orange.svg)](https://firebase.google.com)
-[![HTML5](https://img.shields.io/badge/HTML5-Frontend-red.svg)](https://html.spec.whatwg.org/)
-[![CSS3](https://img.shields.io/badge/CSS3-Styling-blue.svg)](https://developer.mozilla.org/en-US/docs/Web/CSS)
-[![JavaScript](https://img.shields.io/badge/JavaScript-Frontend-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-[![IoT](https://img.shields.io/badge/IoT-Embedded-lightgrey.svg)](https://en.wikipedia.org/wiki/Internet_of_things)
-[![Arduino](https://img.shields.io/badge/Arduino-ESP32-00979D.svg)](https://www.arduino.cc/)
-[![Flask](https://img.shields.io/badge/Flask-Microframework-black.svg)](https://flask.palletsprojects.com/)
+[![Firebase](https://img.shields.io/badge/Firebase-Firestore%20%2B%20Auth-orange.svg)](https://firebase.google.com)
+[![ESP32](https://img.shields.io/badge/ESP32-HX711%20Load%20Cells-00979D.svg)](https://www.arduino.cc/)
+[![Flask](https://img.shields.io/badge/Flask-Middleware-black.svg)](https://flask.palletsprojects.com/)
+[![Rasa](https://img.shields.io/badge/Rasa-3.6-5A17EE.svg)](https://rasa.com/)
+[![License](https://img.shields.io/badge/License-Apache%202.0-lightgrey.svg)](LICENSE)
 
+> **Project status:** university team prototype, built and demonstrated in 2025. The vision model is evaluated with real metrics; the assembled system is not, and the physical cart is no longer available to change that. See [Evaluation](#-evaluation) and [Limitations](#limitations) for exactly what was and was not measured.
 
-## 🚀 CAELIX: The Next-Gen Smart Cart System
-   *Say goodbye to long queues, manual billing, and retail theft.*
+---
 
-**CAELIX** is an intelligent, IoT-powered retail cart system that combines real-time object detection, weight verification, and interactive dashboards to revolutionize the in-store shopping experience. Built using YOLOv8, Firebase, and ESP32 sensors, CAELIX empowers both customers and store managers with seamless checkout, theft detection, and insightful cart analytics — all in one sleek ecosystem.
+## The problem
 
-## ✨ Key Features
+Physical retail loses time and money at the same place: the checkout lane. Queues form at peak hours, staff are tied up supervising transactions, and unattended self-checkout is a well-known shrinkage vector — an item can be left unscanned, swapped for a cheaper barcode, or simply dropped in the bag. The established fix is item-level RFID, which works but requires tagging every unit in the store, and that cost is what keeps it out of most mid-market retail.
 
-- **⚡ Instant Product Detection**  
-  YOLOv8-powered object detection for fast, accurate recognition of store products.
+CAELIX takes the opposite approach: leave the products alone and instrument the **cart**. A shopper scans a barcode with their phone, and the cart independently checks that claim two other ways — what it weighs and what it sees. Agreement means the scan was honest. Disagreement raises an alert on the store's admin dashboard. The hardware to do this is commodity: an ESP32, two load cells, and a camera.
 
-- **🧠 Smart Cart Management**  
-  Multi-threaded system that manages multiple carts with integrated theft detection.
+---
 
-- **🔐 Role-Based Authentication**  
-  Firebase-secured login system with user and admin access levels.
+## How it works
 
-- **💳 Seamless Checkout Experience**  
-  Integrated digital wallet and payment gateway for hassle-free billing.
+The verification logic is a three-way cross-check on a single source of truth in Firestore:
 
-- **📊 Dynamic Admin Dashboard**  
-  Real-time cart monitoring, usage analytics, and activity logs for store administrators.
+| Signal | Source | What it establishes |
+|---|---|---|
+| **Declared** | Barcode scanned by the shopper's phone | What the customer says is in the cart |
+| **Measured** | Dual load cells → HX711 → ESP32 → Flask → Firestore | What the cart physically holds |
+| **Observed** | Cart-mounted phone streaming MJPEG → YOLOv8 inference | What is visibly in the cart |
 
-- **📱 Responsive UI Design**  
-  Mobile-optimized web interfaces for users, admins, and the live cart view.
+A detection worker runs per active cart and compares the three. Two mismatch classes are distinguished (`detection_worker.py`):
 
-- **☁️ Firebase Cloud Backend**  
-  Real-time database syncing and secure data storage with Firestore.
+- **Unscanned item** — an object is detected that is not on the scanned list, and the measured weight exceeds the expected weight for that list.
+- **Missing item** — an item was scanned but is not detected, and the measured weight falls below what that list should weigh.
 
-- **🤖 AI Chatbot Support - CAELIX ASSIST**  
-  Dual-mode conversational AI with **Rasa Framework** providing specialized support for both customers and administrators with real-time Firebase integration.
+Every two seconds the worker writes a snapshot document to `cart_logs/{cartId}` carrying the detected items, the unscanned set, and the missing set. The admin dashboard (`dashboard.html`) subscribes to that collection in real time, and the admin chatbot reads its most recent entry. `manager.py` clears a cart's log document when the cart goes inactive.
 
+Session binding uses a QR code on the cart: scanning it links that physical cart to the shopper's account for the duration of the session, moving the cart document through `activate → active → checkout → completed`.
 
-## 🧩 Codebase Layout
+Checkout awards loyalty points and a membership tier, and generates a PDF receipt via jsPDF into the shopper's purchase history.
+
+### Cart location tracking — read this before citing it
+
+The admin dashboard includes a **Cart Tracker** view: a Leaflet/OpenStreetMap map with a 30-metre circular geofence around the store, cart markers, and an inside/outside-premises status with the distance to the boundary.
+
+**The cart positions are hardcoded.** `script_new.js` defines `cart1Location` and `cart2Location` as two fixed coordinate pairs. There is no GPS module in the cart hardware and no location source anywhere in the firmware or backend. CART001 therefore always renders 18.6 m inside the boundary and CART002 always renders 4.2 m outside it, on every page load.
+
+What is genuinely implemented is the **geofence logic** — the haversine distance calculation, the boundary comparison, and the status rendering are all real and would work unchanged against live coordinates. What does not exist is anything that produces those coordinates. Treat this feature as a working UI demonstration of an unimplemented capability, and describe it that way.
+
+---
+
+## Architecture
 
 ```
-CAELIX_Smart_Cart/
-├── CAELIX_Theft_Detectors/             # Modules for theft detection (product & weight-based)
-│   ├── Product Detector/               # Object detection using YOLO
-│   │   ├── Detection scripts/          # Python scripts for managing detection threads
-│   │   │   ├── detection_worker_2.py   # Worker script that performs object detection using camera
-│   │   │   └── manager.py              # Manages multiple detection sessions for active carts
-│   │   └── model_final.pt              # Trained YOLOv8 model weights for product detection
-│   │
-│   └── Weight Sensor/                   # Weight-based validation to detect under-scanning
-│       └── SmartCart/
-│           ├── sketch_final/            # Arduino code for interfacing load cell via HX711
-│           │   └── sketch_final.ino     # Final Arduino sketch code for ESP32 + HX711 + Load Cell
-│           ├── flask_server_app.py      # Flask app that interfaces with Arduino to send data
-│           └── serviceAccountKey.json   # Firebase credentials for backend communication
+  Shopper's phone                Cart hardware           Cart-mounted phone
+  (barcode scan)             (2× load cell + HX711)    (IP-camera app, MJPEG)
+        │                            │                          │
+        │                            ▼                          │
+        │                     ESP32 firmware                    │
+        │                  tare, calibrate, avg×10              │
+        │                            │  HTTP POST {weight}      │
+        │                            ▼                          │
+        │                 weight_bridge/app.py                  │
+        │                            │                          │
+        ▼                            ▼                          ▼
+  ┌─────────────────────────────────────────────────────────────────┐
+  │                      Cloud Firestore                            │
+  │   carts · products · users · alerts · purchase_history · groups │
+  └─────────────────────────────────────────────────────────────────┘
+        │                            │                          │
+        ▼                            ▼                          ▼
+   User dashboard            Admin dashboard            manager.py
+   wallet, receipts          alerts, analytics       spawns 1 detection
+                                                      thread per active cart
+```
+
+`manager.py` polls the `carts` collection and starts or stops a detection thread as carts go active or idle, so one process serves multiple carts.
+
+---
+
+## Tech stack
+
+| Layer | Technology |
+|---|---|
+| Embedded | ESP32, 2× load cell, 2× HX711 amplifier, Arduino/C++ firmware |
+| Computer vision | YOLOv8s fine-tuned (Ultralytics), OpenCV, scikit-learn (k-means colour heuristic) |
+| Middleware | Flask, `firebase-admin` |
+| Cloud | Cloud Firestore, Firebase Authentication, Firebase Hosting |
+| Frontend | HTML5, CSS3, vanilla JavaScript, Chart.js, Leaflet + OpenStreetMap, `html5-qrcode`, jsPDF |
+| Conversational AI | Rasa 3.6 (dual user/admin bots) |
+
+### Prototype form factor
+
+The build is a **hand-carried plastic shopping basket**, not a supermarket trolley. Two bar-type load cells sit under a rigid platform at opposite edges of the basket floor; the ESP32 and both HX711 amplifiers are soldered to a single perfboard between them, powered by a USB power bank. The camera is an **Android phone running an IP-camera app**, clamped to the basket rim on a tripod arm, serving MJPEG on port 8080 — which is what the `ip_stream_url` field in each cart document points at. Everything scales conceptually to a trolley; nothing here has been built at that size.
+
+---
+
+## 🧩 Repository layout
+
+```
+caelix/
+├── firmware/
+│   └── cart_scale/
+│       └── cart_scale.ino        # ESP32 firmware — dual HX711, Wi-Fi telemetry
 │
-├── CAELIX_UI/                       # Frontend UI for users and admins
-│   ├── Admin_Dashboard/             # Admin monitoring dashboard
-│   │   ├── dashboard.html           # Main admin interface for cart logs and alerts
-│   │   ├── script_new.js            # JS logic for fetching logs, real-time alerts
-│   │   └── style.css                # Styling for the admin dashboard
+├── services/
+│   ├── vision/                   # YOLOv8 detection + mismatch logic
+│   │   ├── manager.py            # one detection thread per active cart
+│   │   ├── detection_worker.py   # per-cart inference, writes cart_logs/{cartId}
+│   │   └── models/model_final.pt # fine-tuned YOLOv8s, 4 product classes
 │   │
-│   ├── Live_cart/                   # Modules related to live user cart interface
-│   │   ├── checkout/                # Checkout page for users
-│   │   │   ├── checkout.html        # User-facing checkout interface
-│   │   │   ├── script.js            # JS for handling scanned item list
-│   │   │   └── styles.css           # Styling for checkout page
-│   │   │
-│   │   └── scanner/                 # Barcode scanner UI and assets
-│   │       ├── COCA-COLA-1.jpg      # Sample product image
-│   │       ├── KFTKB-201906...jpg   # Sample product image
-│   │       ├── adv-pack-blue.png    # Sample product image
-│   │       ├── colin-glass...jpeg   # Sample product image
-│   │       ├── profile-1.png        # Avatar image used in UI
-│   │       ├── barcode.html         # UI for barcode scanning
-│   │       ├── script.js            # JS for barcode scanner logic
-│   │       └── style.css            # Styling for scanner UI
+│   ├── weight_bridge/            # ESP32 -> Firestore middleware
+│   │   ├── app.py                # Flask, POST /weight
+│   │   └── serviceAccountKey.example.json
 │   │
-│   ├── User_Dashboard/            # Dashboard for normal users
-│   │   ├── imgcards.png           # Product card image
-│   │   ├── profile-1.png          # Avatar icon
-│   │   ├── gateway_style.css      # Gateway page styling
-│   │   ├── user_dash.html         # Main user dashboard
-│   │   ├── user_script.js         # Logic for user interactions
-│   │   ├── user_style.css         # Styling for user dashboard
-│   │   └── wallet_gateway.html    # Wallet gateway interface
-│   │
-│   ├── logos/                     # Brand logos used across pages
-│   │   ├── complete_logo.png      # Full CAELIX logo
-│   │   └── dashboard_logo.png     # Logo for dashboards
-│   │
-│   ├── background.jpg             # UI background image
-│   ├── bg.jpg                     # Alternate background image
-│   ├── cart.png                   # Cart icon used in UI
-│   ├── footer.jpg                 # Footer image for landing page
-│   ├── landing_page.htm           # Initial landing page for the CAELIX system
-│   ├── script.js                  # General UI logic for landing page
-│   └── style.css                  # Shared styles for landing page
+│   └── assistant/                # CAELIX Assist — Rasa chatbots
+│       ├── admin_bot/
+│       ├── user_bot/
+│       └── web_widget/           # browser chat widget
 │
-├── CAELIX_ASSIST/                   # AI Chatbot system
-│   ├── admin_bot/                   # Administrator chatbot
-│   │   ├── config.yml              # Rasa NLU/Core configuration for admin
-│   │   ├── domain.yml              # Admin intents, responses, and actions
-│   │   ├── credentials.yml         # Authentication for admin bot
-│   │   ├── endpoints.yml           # Action server endpoints
-│   │   ├── serviceAccountKey.json  # Firebase service account
-│   │   ├── actions/                # Custom admin actions
-│   │   ├── data/                   # Training data for admin bot
-│   │   └── models/                # Trained admin bot model
-│   │       └── admin_model.tar.gz
-│   ├── user_bot/                    # Customer support chatbot
-│   │   ├── config.yml              # Rasa configuration for user bot
-│   │   ├── domain.yml              # User intents, responses, and actions
-│   │   ├── credentials.yml         # User bot authentication
-│   │   ├── endpoints.yml           # User bot action endpoints
-│   │   ├── actions/                # Custom user actions
-│   │   ├── data/                   # User bot training data
-│   │   └── models/                # Trained user bot model
-│   │       └── user_model.tar.gz
-│   ├── chatbot_site/               # Web interface for chatbot
-│   ├── requirements.txt            # Python dependencies for chatbots
-│   └── README.md                   # Chatbot setup instructions
-```
-## 🔧 CAELIX | Components Breakdown
-
-  *Explore the heartbeat of CAELIX – where intelligent hardware, real-time vision models, and sleek interfaces converge to deliver seamless smart cart shopping.*
-
-### 🧠 Backend Intelligence
-────────────────────────────
-
-#### 📦 `detection_worker.py` — Cart Vision in Motion  
-- Powers **real-time object detection** using **YOLOv8**
-- **Multithreaded** to handle multiple carts simultaneously  
-- Fuses **visual data with weight sensor input** for fraud-proof detection
-
-
-#### 🔁 `manager.py` — Cart Orchestrator  
-- Monitors the **state of every cart**
-- Dynamically manages **detection threads** based on cart usage  
-- Designed for **scalable multi-cart deployments**
-
-
-#### 🌐 `flask_server_app.py` — Arduino Link & Firebase Relay  
-- Interfaces with **ESP32/Arduino-based cart hardware**  
-- Captures **live weight data** from **load cells** via serial input  
-- Sends validated readings to **Firebase** for centralized monitoring
-
-
-#### 🤖 `CAELIX_ASSIST` — AI Conversational Intelligence  
-- **Dual-mode chatbots** with specialized **User Support** and **Admin Management** capabilities
-- **Rasa-powered NLU** with real-time **Firebase integration** for live data access
-- **Proactive alert system** for theft detection, inventory management, and customer support
-
-
-### ⚙️ Embedded Hardware Layer
-────────────────────────────
-
-#### 🛠️ `sketch.ino` — Cart-Embedded Brain  
-- Interfaces with **load cells via HX711** modules  
-- Transmits **live weight readings** to the backend  
-- Handles **calibration, taring**, and **hardware fault detection**
-
-
-### 🖥️ Frontend Interfaces
-────────────────────────────
-
-
-#### 🚪 `landing_page.html` — Your Entry to CAELIX  
-- Dual login for **Users** and **Admins**  
-- Clean, **responsive UI** with animated transitions  
-- Enables **smart cart pairing via QR scan**
-
-
-#### 👤 `user_dash.html` — Shopper Control Center  
-- Displays **wallet balance**, current cart, and history  
-- Shows **scanned product list** in real-time  
-- One-click access to **digital receipts**
-
-
-#### 📷 `barcode.html` — Cart-Side Scanner  
-- Scans **item barcodes** using the cart’s embedded scanner  
-- Sends data to backend for **YOLOv8 vision + weight fusion validation**  
-- Designed for **kiosk displays** and responsive updates
-
-
-#### 💳 `checkout.html` — Exit Protocol  
-- Shows a **final list of all scanned items** with pricing  
-- Starts **secure checkout** via wallet or UPI  
-- Automatically generates and stores **digital receipts**
-
-
-#### 💰 `wallet_gateway.html` — Add Money Interface  
-- Allows users to **top up their balance** via multiple methods  
-- Logs every transaction for **audit and transparency**  
-- Supports **cards, UPI, and offline integration** if needed
-
-
-#### 🧭 `dashboard.html` — Admin Mission Control  
-- Displays **real-time cart activity** and scanned item logs  
-- Alerts admins for **possible theft or item mismatch**  
-- Offers **analytics** on product trends and cart usage
-
-
-*Modular by design. CAELIX grows with your store — scale carts, plug in new detection models, or sync with ERP systems effortlessly.*
-
-
-## 🛠️ Installation & Setup
-
-Set up **CAELIX Smart Cart System** locally with the following steps.  
-*This guide assumes you're using **Python for the backend**, **Firebase for data handling**, and **HTML for the frontend interface**.*
-
-
-### 📦 Prerequisites
-⸻⸻⸻⸻⸻
-
-Ensure the following are ready before you begin:
-
-- ✅ **Python 3.8 or higher**
-- ✅ **Modern Web Browser** (Chrome, Firefox, Safari, or Edge)
-- ✅ **Firebase Project** with Firestore & Realtime Database enabled
-- ✅ **Webcam or USB Camera** for object detection
-- ✅ **Rasa Framework 3.6+** *(Optional - for AI chatbot support)*
-
-
-### ⚙️ Backend Setup
-⸻⸻⸻⸻⸻⸻
-
-
-1. **Clone the Repository**
-    ```bash
-    git clone https://github.com/Khanakag-17/CAELIX_Smart_Cart_System.git
-    cd CAELIX_Smart_Cart_System
-    ```
-
-2. **Install Required Python Libraries**
-    ```bash
-    pip install requirements.txt
-    ```
-    OR
-
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-4. **Configure Firebase**
-    - Go to the [Firebase Console](https://console.firebase.google.com) and **create a new project**.
-    - Navigate to **Project Settings → Service Accounts** and click **Generate new private key**.
-    - Download the `.json` file and save it as:
-      ```plaintext
-      CAELIX_Theft_Detectors/Weight Sensor/SmartCart/serviceAccountKey.json
-      CAELIX_ASSIST/admin_bot/serviceAccountKey.json  # For chatbot (if using)
-      ```
-    - Replace **// Your Firebase configuration** with the generated API.
-
-5. **Model Setup**
-    - The **default YOLOv8n model** (`yolov8n.pt`) will be automatically downloaded at runtime.
-    - To use our **custom-trained grocery model**, download it from:  
-      👉 [Custom Model (Kaggle)](https://www.kaggle.com/models/khanakagrawal/grocery-detector)
-    - Save it in:
-      ```plaintext
-      CAELIX_Theft_Detectors/Product Detector/model_final.pt
-      ```
-    - *If required, update model paths in your detection scripts accordingly.*
-
-6. **Object Detection Dataset & Training Code**
-    - 📂 Dataset used: [Grocery Items Dataset on Roboflow](https://universe.roboflow.com/productcv/grocery-items-rvvcm)
-    - 📘 Model training: [Multi-Class Grocery Detector – 95% Precision (Kaggle)](https://www.kaggle.com/code/khanakagrawal/multi-class-grocery-detector-95-precision)
-  
-7. **Weight Tracking with Load Cell & Arduino (ESP32)**
-    - A dedicated Python script (`flask_server_app.py`) handles **Wi-Fi communication** with an **ESP32** board connected to **HX711 and Load Cells**.
-    - The script:
-        - Receives **real-time weight data** from ESP32 over Wi-Fi.
-        - Sends updates to the **Firebase Realtime Database**.
-    - Ensure you:
-        - Flash your ESP32 with the correct `sketch.ino` that sends weight via Wi-Fi.
-        - Connect ESP32 and your local machine (running `flask_server_app.py`) to the **same Wi-Fi network**.
-        - Run the script after powering the ESP32 to start syncing weight data.
-
-    - 📍 Sample wiring:
-      ```plaintext
-      Load Cell      → HX711 → ESP32
-      -----------------------------------
-      Red (E+)       → E+    → 3.3V
-      Black (E-)     → E-    → GND
-      Green (A+)     → A+    → 
-      White (A-)     → A-    → 
-                     → DT   → GPIO 4
-                     → SCK  → GPIO 5
-      ```
-   - *For detailed hardwarw & server setup and customization, see `CAELIX_Theft_Detectors/Weight Sensor/SmartCart/README.md`*
-
-8. **Setup CAELIX ASSIST Chatbot** *(Optional - for AI support)*
-    ```bash
-    cd CAELIX_Smart_Cart/CAELIX_ASSIST
-    pip install -r requirements.txt
-    
-    # Train chatbot models
-    cd admin_bot && rasa train
-    cd ../user_bot && rasa train
-    
-    # Start chatbot servers (run in separate terminals)
-    cd admin_bot && rasa run --port 5005 --cors "*"
-    cd user_bot && rasa run --port 5006 --cors "*"
-    ```
-    - *For detailed chatbot setup and customization, see `CAELIX_ASSIST/README.md`*
-
-
-### 🌐 Frontend Setup
-⸻⸻⸻⸻⸻⸻
-
-
-1. **Launch the Web Interface**
-    - Open this file in your browser:
-      ```plaintext
-      CAELIX_Smart_Cart/CAELIX_UI/landing_page.htm
-      ```
-    - *This will allow access to both **User** and **Admin** dashboards.*
-
-2. **(Optional) Development Mode**
-    - Use **Live Server** extension in VS Code or a local HTTP server for live previews.
-    - Ensure **CORS settings** are correctly configured in Firebase to support local testing.
-
-
-_You're now ready to explore the smart cart ecosystem — real-time vision meets seamless shopping!_ 🛒✨
-
-
-## 🧭 Gudie to CAELIX
-
-### 👤 For Customers
-
-#### 🔐 Sign In  
-Access the system via `landing_page.html`  
-→ Select **User Login** to enter your personalized dashboard.
-
-#### 🛒 Pick Your Smart Cart  
-Scan the **QR code** on your chosen smart cart using your mobile device.  
-→ This links the physical cart to your digital profile.
-
-#### 📦 Start Shopping  
-Scan product **barcodes** using the built-in cart scanner (`barcode.html`).  
-→ The system validates items using **YOLOv8 object detection** + **load cell weight verification**.
-
-#### 💼 Wallet Management  
-Add funds securely via the **Add Money** option (`wallet_gateway.html`).  
-→ Track your available balance and past top-ups on your dashboard.
-
-#### 💳 Checkout & Payment  
-Once done shopping, tap **Proceed to Payment**.  
-→ The system automatically verifies that all items are scanned and paid for.
-
-#### 🧾 Get Receipt  
-A **digital receipt** is generated immediately post-payment.  
-→ View all transaction history directly from your User Dashboard.
-
-#### 💬 AI Assistant Support *(Optional)*
-Access **CAELIX ASSIST** chatbot for instant help with shopping, payments, and technical support.  
-→ Available as a floating chat widget on all user pages.
-
-────────────────────────────────────────────────────────
-
-### 🛠️ For Administrators
-
-#### 🔐 Admin Login  
-Log in via `landing_page.html` using admin credentials.  
-→ This grants access to the Admin Dashboard (`dashboard.html`).
-
-#### 📡 Live Cart Monitoring  
-Track **real-time activity** of all smart carts:  
-→ Item scans, total weight, and shopping session duration.
-
-#### 💲 Sales Overview  
-Access **detailed analytics** including:  
-→ Daily, weekly, and monthly sales data  
-→ Cart-wise revenue distribution
-
-#### 🚨 Theft Detection Alerts  
-Get **instant alerts** triggered by potential theft behavior:  
-→ YOLOv8 + weight mismatch detection flags unauthorized actions.
-
-#### 📊 Cart Status Overview  
-Monitor the **operational status** of all carts:  
-→ Active, idle, under maintenance, or disconnected.
-
-#### 📦 Live Inventory  
-View and manage live product inventory:  
-→ Critical stock alerts, category-wise breakdowns, and refill recommendations.
-
-#### 📷 Camera Monitor  
-Access **live cart camera feeds** in real-time:  
-→ Visual monitoring of cart content and user interaction.
-
-#### 🤖 AI Admin Assistant *(Optional)*
-Access **CAELIX ASSIST** admin chatbot for instant insights, alerts, and system management support.  
-→ Provides proactive notifications and real-time data analysis.
-
-
-## 🔄 Navigation Flow
-
-```
-landing_page.html  (🔐 Login Page)
-├── User Login → user_dash.html  (👤 User Dashboard)
-│   ├── Add Money → wallet_gateway.html  (💳 Digital Wallet)
-│   └── Start Shopping → barcode.html  (🛒 Live Cart Scanner)
-│       └── Scan Items (YOLOv8 + Load Cell)
-│       └── Proceed to Checkout → checkout.html  (🧾 View & Confirm Cart)
-│           └── Pay via Wallet → Loyalty Points & Tier updation  (💰 Transaction)
-│           └── Redirect → user_dash.html  (🏠 Dashboard)
-└── Admin Login → dashboard.html  (🛠️ Admin Control Panel)
-    ├── Live Cart Monitoring  (📡 Real-time cart activity)
-    ├── Sales Overview  (💲 Monthly/Weekly/Daily Analytics)
-    ├── Theft Detection Alerts  (🚨 YOLOv8 + Weight-based detection)
-    ├── Cart Status Overview  (📊 Active/Idle cart metrics)
-    ├── Live Inventory  (📦 Critical stock flagging & Complete overview)
-    └── Camera Monitor  (📷 Cart camera response monitor)
+├── web/                          # deployed frontend (Firebase Hosting)
+│   ├── landing_page.htm          # entry point, user/admin login
+│   ├── Admin_Dashboard/
+│   ├── User_Dashboard/
+│   ├── Live_cart/scanner/        # barcode scanning
+│   ├── Live_cart/checkout/       # checkout + receipt generation
+│   └── logos/
+│
+├── docs/
+│   ├── hardware.md               # wiring, pin map, calibration
+│   └── evaluation.md             # what was measured, and what wasn't
+│
+├── CITATION.cff
+├── LICENSE                       # Apache 2.0
+└── README.md
 ```
 
-## 📊 System Architecture
+Each service under `services/` has its own `README.md` and `requirements.txt`.
+Install only the one you need — the vision service and the chatbots have
+incompatible Python requirements.
 
-- **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
-- **Backend**: Python with OpenCV and YOLOv8
-- **Database**: Firebase Firestore
-- **AI/ML**: YOLOv8 for object detection, Rasa for conversational AI
-- **Payment**: Integrated wallet system
-- **Chatbot**: Dual-mode Rasa-powered assistant with Firebase integration
+---
 
-## 🔒 Security Features
+## 🛠️ Setup
 
-- Secure user authentication via Firebase Authentication
-- Encrypted payment processing
-- Firebase security rules
-- Input validation and sanitization
-- Session management
+### Prerequisites
 
-## 🤖 AI/ML Components
+- **Python 3.9 or 3.10.** The chatbots pin `rasa==3.6.20`, which will not install on 3.11+. If you are skipping the chatbots, any Python ≥3.9 works for the vision and weight services.
+- A **Firebase project** with **Cloud Firestore** enabled. *(Realtime Database is not used anywhere in this codebase.)*
+- A **camera reachable over HTTP serving an MJPEG stream** — in the original build, an Android phone running an IP-camera app at `http://<phone-ip>:8080/video`. The vision service opens a per-cart stream URL read from Firestore; it does **not** use a locally attached webcam.
+- An **ESP32** with two load cells and two HX711 amplifiers, for the weight path. See [`docs/hardware.md`](docs/hardware.md).
 
-- **YOLOv8 Object Detection**: Real-time product identification
-- **Custom Model Training**: Specific to retail products
-- **Multi-object Tracking**: Handles multiple items simultaneously
-- **Confidence Scoring**: Accuracy thresholds for reliable detection
-- **CAELIX ASSIST Chatbot**: Rasa-powered conversational AI with dual-mode support
-- **Natural Language Understanding**: Intent recognition and entity extraction for customer & admin support
+### 1. Clone
 
-## 🎨 UI/UX Features
+```bash
+git clone https://github.com/Khanakag-17/CAELIX_Smart_Cart_System.git
+cd CAELIX_Smart_Cart_System
+```
 
-- **Responsive Design**: Works on desktop, tablet, and mobile
-- **Modern Interface**: Clean, intuitive user experience
-- **Real-time Updates**: Live cart status and notifications
-- **Interactive Chatbot**: Customer support integration
+There is no repo-wide `requirements.txt`. Each service declares its own, because
+the vision service and the Rasa chatbots have conflicting dependencies. Install
+per service, ideally into separate virtual environments.
 
+### 2. Firebase credentials
 
-## 🐛 Troubleshooting
+1. In the [Firebase Console](https://console.firebase.google.com), create a project and enable Cloud Firestore.
+2. **Project Settings → Service Accounts → Generate new private key**.
+3. Save the JSON as `serviceAccountKey.json` in whichever services you are running:
+   - `services/weight_bridge/` — a filled-in template is provided as `serviceAccountKey.example.json`
+   - `services/vision/`
+   - `services/assistant/admin_bot/`
 
-### Common Issues
+   Each service resolves the key relative to its own directory, so you can run
+   from any working directory. The root `.gitignore` excludes `serviceAccountKey.json`
+   so a real key cannot be committed by accident.
+4. Replace the `// Your Firebase configuration` block in the frontend JavaScript under `web/` with your project's web config.
 
-1. **Model Loading Errors**
-   - Ensure model files are in the correct directory
-   - Check file permissions and paths
+### 3. Weight bridge
 
-2. **Firebase Connection Issues**
-   - Verify service account key is properly configured
-   - Check internet connectivity and Firebase project status
+```bash
+cd services/weight_bridge
+pip install -r requirements.txt
+python app.py                    # listens on 0.0.0.0:5000
+```
 
-3. **Camera Access Problems**
-   - Grant camera permissions in browser
-   - Ensure camera is not being used by other applications
+Before flashing the ESP32, change these three values in
+[`firmware/cart_scale/cart_scale.ino`](firmware/cart_scale/cart_scale.ino) —
+they are hardcoded to the original demo rig:
+
+| Constant | Committed value | Change to |
+|---|---|---|
+| `ssid` / `password` | `SmartCart` / `smartcart123` | your network |
+| `serverName` | `http://192.168.177.90:5000/weight` | your server's LAN IP |
+| `SCALE1` / `SCALE2` | `100.585037` / `118.054420` | your own calibration factors |
+
+The ESP32 and the server must be on the same network. Full wiring diagram, pin
+map and calibration procedure: **[`docs/hardware.md`](docs/hardware.md)**.
+
+> **Note:** `app.py` writes to a single hardcoded cart document, `CART001`.
+> Multi-cart weight routing was not implemented.
+
+### 4. Vision service
+
+```bash
+cd services/vision
+pip install -r requirements.txt
+python manager.py
+```
+
+Weights ship at `services/vision/models/model_final.pt`, or download them from
+[Kaggle](https://www.kaggle.com/models/khanakagrawal/grocery-detector). Each cart
+document in Firestore needs an `ip_stream_url` field pointing at its camera.
+
+Training dataset: [Roboflow](https://universe.roboflow.com/productcv/grocery-items-rvvcm).
+Training notebook: [Kaggle](https://www.kaggle.com/code/khanakagrawal/multi-class-grocery-detector-95-precision).
+
+### 5. CAELIX Assist (optional)
+
+```bash
+cd services/assistant
+pip install -r requirements.txt          # needs Python 3.8-3.10
+
+cd admin_bot && rasa train && cd ..
+cd user_bot  && rasa train && cd ..
+```
+
+Each bot needs its own action server alongside it. See
+[`services/assistant/README.md`](services/assistant/README.md).
+
+### 6. Frontend
+
+Open `web/landing_page.htm` in a browser, or serve the `web/` directory over a
+local HTTP server (VS Code Live Server works). Both user and admin entry points
+are reached from this page.
+
+---
+
+## 🧭 Using the system
+
+**As a shopper:** log in from `landing_page.htm` → scan the QR code on a cart to bind it to your session → scan product barcodes in `barcode.html` → top up in `wallet_gateway.html` → complete payment in `checkout.html` and receive a generated receipt.
+
+**As an administrator:** log in from `landing_page.htm` → `dashboard.html` shows live cart state, mismatch alerts, sales analytics, per-cart status, inventory levels, and camera feeds.
+
+```
+landing_page.htm
+├── User  → user_dash.html
+│            ├── wallet_gateway.html      (add funds)
+│            └── barcode.html             (scan → weight + CV verification)
+│                 └── checkout.html       (pay → receipt → back to dashboard)
+└── Admin → dashboard.html
+             ├── live cart monitoring     ├── theft/mismatch alerts
+             ├── sales overview           ├── cart status
+             └── inventory                └── camera monitor
+```
+
+---
+
+## 📊 Evaluation
+
+Two things are true here and are kept apart deliberately: **the detector was evaluated properly; the assembled system was not.**
+
+### Detector — measured
+
+YOLOv8s fine-tuned for 50 epochs at 640×640 on a purpose-built four-class grocery dataset, evaluated on an 834-image validation split (1,404 instances):
+
+| Class | Instances | Precision | Recall | mAP@50 | mAP@50-95 |
+|---|---|---|---|---|---|
+| maggi-noodles | 371 | 0.944 | 0.965 | 0.982 | 0.786 |
+| nevia-cream | 407 | 0.977 | 0.975 | 0.992 | 0.862 |
+| taaza-tea-leaves | 249 | 0.956 | 0.958 | 0.988 | 0.805 |
+| tide-detergent | 377 | 0.973 | 0.939 | 0.985 | 0.802 |
+| **all** | **1,404** | **0.962** | **0.959** | **0.987** | **0.814** |
+
+mAP@75 = 0.950. Inference: **8.5 ms per image** on a Tesla T4 (12.1 ms single-image, warm).
+
+**Read these as an upper bound.** The dataset's 4,173 images were generated from 1,391 source photographs — three per source — and the notebook splits them by shuffling at the file level, so augmented variants of the same photograph very likely appear in both training and validation. A group-aware split partitioned by source photograph would give the honest figure; it has not been run. These are also **detector** metrics on a curated dataset, not end-to-end system accuracy, and the 10% test partition the notebook creates was never evaluated. Full detail and the reasoning in [`docs/evaluation.md`](docs/evaluation.md).
+
+### System — not measured
+
+**No structured test protocol was ever run against the assembled cart**, and it is no longer available to produce one. No end-to-end mismatch detection rate, false-alarm rate, weight accuracy, or alert latency exists. The system was validated by working demonstration. Rather than paper over that, the rest of this section states what remains verifiable.
+
+**Verifiable from the deployed backend.** The Firestore project remained live and queryable as of 24 August 2026, holding the development records written during 2025: cart documents with session lifecycle state, a product catalogue keyed by EAN-13 barcode, per-user purchase-history receipt subcollections, and group-shopping records. Notably, the `cart_logs` collection that the vision pipeline writes its mismatch snapshots to **does not exist** in that instance — which, together with two defects visible in `detection_worker.py`, indicates the committed detection worker is not in a working state. Observed collection contents, the inferred schema, and that analysis are recorded in **[`docs/evaluation.md`](docs/evaluation.md)**.
+
+**Verifiable from the firmware.** The load-cell calibration factors (`SCALE1 = 100.585037`, `SCALE2 = 118.054420`), boot-time taring, 10-sample averaging per reading, and 1 Hz transmission interval are documented parameters, evidence that a calibration procedure was carried out. They are not accuracy measurements. See [`docs/hardware.md`](docs/hardware.md).
+
+**Verifiable from the model.** The [dataset](https://universe.roboflow.com/productcv/grocery-items-rvvcm) was built and annotated for this project, growing across three Roboflow versions — 515 images (22 Jun 2025) → 1,545 (23 Jun) → 4,173 at 640×640 (5 Jul 2025). The [training notebook](https://www.kaggle.com/code/khanakagrawal/multi-class-grocery-detector-95-precision) is public and carries the full evaluation summarised above, plus precision–recall, F1-confidence, precision-confidence and recall-confidence curves and a confusion matrix.
+
+**What would still need measuring.** Detector performance on cart-mounted camera imagery under store lighting, and on a leak-free group-aware split; load-cell error against reference masses across the working range; end-to-end mismatch true-positive and false-positive rates across scripted scan / no-scan / barcode-swap scenarios; and alert latency from event to dashboard. None were captured, and none are reconstructible from what survives. A protocol for each is specified in [`docs/evaluation.md`](docs/evaluation.md) for anyone extending the work.
+
+---
+
+## Limitations
+
+Stated plainly, because a prototype with no listed downsides is less trustworthy than one that is honest about its edges.
+
+- **The system was never quantitatively evaluated**, only the detector. Demonstration is not measurement.
+- **Detector metrics are an upper bound**, not a final result — the train/validation split shuffles augmented images at file level, so variants of the same source photograph likely span both splits.
+- **The committed detection worker does not appear to run.** `detection_worker.py` subscripts a Firestore `DocumentReference` where it should use the fetched snapshot (lines 39 and 83), and applies a bitwise operator between a set and a boolean (lines 129 and 131). Both raise `TypeError`. The absence of any `cart_logs` collection in the deployed Firestore is consistent with this. Documented in [`docs/evaluation.md`](docs/evaluation.md) rather than quietly fixed, so the record stays accurate.
+- **Four-class vocabulary.** The detector recognises `maggi-noodles`, `nevia-cream`, `tide-detergent`, and `taaza-tea-leaves` — enough to prove the pipeline, nowhere near a store catalogue. Unpackaged and visually similar goods were never addressed.
+- **Single-cart weight path.** `services/weight_bridge/app.py` writes to a hardcoded `CART001`; the multi-cart claim holds for the vision layer, not the weight layer.
+- **Unauthenticated LAN transport.** The ESP32 POSTs plain HTTP to a hardcoded local IP with no authentication, and Wi-Fi credentials are compiled into the firmware.
+- **Not security-hardened.** This is a coursework prototype. Firestore security rules, credential handling, and session-token validation were never reviewed or hardened for production use, and the wallet is a **simulated** payment flow — no payment processor is integrated.
+- **Occlusion is unhandled.** Stacked or overlapping items in a real cart will defeat a single top-down camera; this was never tested under realistic loading.
+- **Crude colour heuristic.** `detect_color()` uses k-means with hardcoded RGB thresholds as a secondary signal. It is a heuristic, not a validated classifier.
+- **Mismatch records are overwritten, not accumulated.** `cart_logs` is keyed by cart ID and written with `set()`, so each cart holds only its latest snapshot. There is no alert history to audit or analyse after the fact.
+- **Cart location is not tracked.** The geofence map runs on two hardcoded coordinate pairs; no GPS hardware or location source exists. See [Cart location tracking](#cart-location-tracking--read-this-before-citing-it).
+- **Basket-scale prototype.** Built on a hand-carried shopping basket. Load distribution, camera coverage, and occlusion all behave differently on a full trolley, and none of that was tested.
+- **Calibration drift and connectivity.** Load cells need periodic recalibration, and the whole design assumes continuous Wi-Fi coverage. Neither was tested over time.
+
+---
+
+## 👥 Team
+
+Built by a four-person team at LNCT University, Bhopal:
+
+**Aashman Singh Verma** · **Abhishree Soni** · **Ashutosh Singh** · **Khanak Agrawal**
+
+Who wrote what is recorded in the
+[commit history](https://github.com/Khanakag-17/CAELIX_Smart_Cart_System/graphs/contributors)
+and in the authorship notes on individual documents under `docs/`.
+
+---
+
+## 🔗 Links
+
+| | |
+|---|---|
+| Live site | [livecart-1407.web.app](https://livecart-1407.web.app) |
+| Model training notebook | [Kaggle](https://www.kaggle.com/code/khanakagrawal/multi-class-grocery-detector-95-precision) |
+| Trained weights | [Kaggle Models](https://www.kaggle.com/models/khanakagrawal/grocery-detector) |
+| Dataset | [Roboflow](https://universe.roboflow.com/productcv/grocery-items-rvvcm) |
+
+## 📄 License
+
+Apache License 2.0 — see [LICENSE](LICENSE).
