@@ -12,6 +12,8 @@
 
 > **Project status:** university team prototype, built and demonstrated in 2025. The vision model is evaluated with real metrics; the assembled system is not, and the physical cart is no longer available to change that. See [Evaluation](#-evaluation) and [Limitations](#limitations) for exactly what was and was not measured.
 
+**▶ [Watch the demo](https://www.youtube.com/watch?v=u3Lkdf7qy1o)** · **[Live site](https://livecart-1407.web.app)**
+
 ---
 
 ## The problem
@@ -330,6 +332,7 @@ and in the authorship notes on individual documents under `docs/`.
 | | |
 |---|---|
 | Live site | [livecart-1407.web.app](https://livecart-1407.web.app) |
+| Demo video | [YouTube](https://www.youtube.com/watch?v=u3Lkdf7qy1o) |
 | Model training notebook | [Kaggle](https://www.kaggle.com/code/khanakagrawal/multi-class-grocery-detector-95-precision) |
 | Trained weights | [Kaggle Models](https://www.kaggle.com/models/khanakagrawal/grocery-detector) |
 | Dataset | [Roboflow](https://universe.roboflow.com/productcv/grocery-items-rvvcm) |
