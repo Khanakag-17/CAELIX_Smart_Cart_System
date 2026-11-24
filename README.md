@@ -10,7 +10,7 @@
 [![Rasa](https://img.shields.io/badge/Rasa-3.6-5A17EE.svg)](https://rasa.com/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-lightgrey.svg)](LICENSE)
 
-> **Project status:** university team prototype, built and demonstrated in 2025. The vision model is evaluated with real metrics; the assembled system is not, and the physical cart is no longer available to change that. See [Evaluation](#-evaluation) and [Limitations](#limitations) for exactly what was and was not measured.
+> **Project status:** university team prototype, built and demonstrated in 2025. The vision model has recorded validation metrics, which are likely inflated; the assembled system was never evaluated, and the physical cart is no longer available to change that. See [Evaluation](#-evaluation) and [Limitations](#limitations) for exactly what was and was not measured.
 
 **▶ [Watch the demo](https://www.youtube.com/watch?v=u3Lkdf7qy1o)** · **[Live site](https://livecart-1407.web.app)**
 
@@ -263,11 +263,11 @@ landing_page.htm
 
 ## 📊 Evaluation
 
-Two things are true here and are kept apart deliberately: **the detector was evaluated properly; the assembled system was not.**
+Two things are true here and are kept apart deliberately: **the detector has recorded metrics, though they are likely inflated; the assembled system was never evaluated.**
 
-### Detector — measured
+### Detector — recorded metrics
 
-YOLOv8s fine-tuned for 50 epochs at 640×640 on a purpose-built four-class grocery dataset, evaluated on an 834-image validation split (1,404 instances):
+YOLOv8s fine-tuned at 640×640 on a purpose-built four-class grocery dataset, validated on an 834-image split (1,404 instances):
 
 | Class | Instances | Precision | Recall | mAP@50 | mAP@50-95 |
 |---|---|---|---|---|---|
@@ -279,7 +279,7 @@ YOLOv8s fine-tuned for 50 epochs at 640×640 on a purpose-built four-class groce
 
 mAP@75 = 0.950. Inference: **8.5 ms per image** on a Tesla T4 (12.1 ms single-image, warm).
 
-**Read these as an upper bound.** The dataset's 4,173 images were generated from 1,391 source photographs — three per source — and the notebook splits them by shuffling at the file level, so augmented variants of the same photograph very likely appear in both training and validation. A group-aware split partitioned by source photograph would give the honest figure; it has not been run. These are also **detector** metrics on a curated dataset, not end-to-end system accuracy, and the 10% test partition the notebook creates was never evaluated. Full detail and the reasoning in [`docs/evaluation.md`](docs/evaluation.md).
+**Read these as an upper bound, not a result.** The validation run loaded weights trained in an earlier session, then re-split the data with an unseeded shuffle, so many of the 834 validation images were very likely in that model's training set. On top of that, the dataset's 4,173 images were generated from 1,391 source photographs — three per source — and the notebook splits them by shuffling at the file level, so augmented variants of the same photograph very likely appear in both training and validation. A group-aware split partitioned by source photograph would give the honest figure; it has not been run. These are also **detector** metrics on a curated dataset, not end-to-end system accuracy, and the 10% test partition the notebook creates was never evaluated. Full detail and the reasoning in [`docs/evaluation.md`](docs/evaluation.md).
 
 ### System — not measured
 
@@ -299,8 +299,8 @@ mAP@75 = 0.950. Inference: **8.5 ms per image** on a Tesla T4 (12.1 ms single-im
 
 Stated plainly, because a prototype with no listed downsides is less trustworthy than one that is honest about its edges.
 
-- **The system was never quantitatively evaluated**, only the detector. Demonstration is not measurement.
-- **Detector metrics are an upper bound**, not a final result — the train/validation split shuffles augmented images at file level, so variants of the same source photograph likely span both splits.
+- **The system was never quantitatively evaluated.** Demonstration is not measurement, and the detector's own metrics are likely inflated (next point).
+- **Detector metrics are an upper bound**, not a final result — the validation set was re-shuffled separately from training, and augmented variants of the same photograph likely span both splits.
 - **The committed detection worker does not appear to run.** `detection_worker.py` subscripts a Firestore `DocumentReference` where it should use the fetched snapshot (lines 39 and 83), and applies a bitwise operator between a set and a boolean (lines 129 and 131). Both raise `TypeError`. The absence of any `cart_logs` collection in the deployed Firestore is consistent with this. Documented in [`docs/evaluation.md`](docs/evaluation.md) rather than quietly fixed, so the record stays accurate.
 - **Four-class vocabulary.** The detector recognises `maggi-noodles`, `nevia-cream`, `tide-detergent`, and `taaza-tea-leaves` — enough to prove the pipeline, nowhere near a store catalogue. Unpackaged and visually similar goods were never addressed.
 - **Single-cart weight path.** `services/weight_bridge/app.py` writes to a hardcoded `CART001`; the multi-cart claim holds for the vision layer, not the weight layer.

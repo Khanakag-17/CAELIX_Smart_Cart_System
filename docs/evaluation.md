@@ -4,7 +4,7 @@
 
 Two different things are true here, and keeping them apart is the point of this document.
 
-**The detector was properly evaluated.** YOLOv8s fine-tuned on a purpose-built four-class grocery dataset achieves **0.962 precision, 0.959 recall, 0.987 mAP@50, 0.814 mAP@50-95** on an 834-image validation split, at 8.5 ms inference. Those are real, measured, reproducible numbers — with one methodological caveat, stated in §3, that makes them an upper bound rather than a final answer.
+**The detector has recorded metrics, but they are likely inflated.** A validation run of the fine-tuned YOLOv8s reports **0.962 precision, 0.959 recall, 0.987 mAP@50, 0.814 mAP@50-95** on an 834-image split, at 8.5 ms inference. Those are real outputs of a real run, but the way the run was set up (§3) means many validation images were probably seen in training, so they are an upper bound, not a result.
 
 **The assembled system was not evaluated.** No structured test protocol was run against the physical cart. No end-to-end mismatch detection rate, false-alarm rate, weight accuracy, or alert latency was ever recorded, and the hardware is no longer available to produce them. The system was validated by demonstration.
 
@@ -124,7 +124,7 @@ Roboflow reports 1,391 source images in the dataset, so v3's 4,173 reflects augm
 
 ### Detector metrics — measured
 
-**Method.** `model.val()` on the held-out validation split, Ultralytics 8.3.168, PyTorch 2.6.0+cu124, Tesla T4. Validation set: **834 images, 1,404 labelled instances.** Training run: YOLOv8s fine-tuned for 50 epochs at 640×640 with augmentation enabled.
+**Method.** `model.val()` in the published training notebook, Ultralytics 8.3.168, PyTorch 2.6.0+cu124, Tesla T4. Validation set: **834 images, 1,404 labelled instances.** In that notebook the training cells (YOLOv8s, 50 epochs, 640×640) are commented out: the run loads `model_final.pt` from an earlier session and only validates it.
 
 | Class | Instances | Precision | Recall | F1 | mAP@50 | mAP@50-95 |
 |---|---|---|---|---|---|---|
@@ -146,15 +146,17 @@ Additional thresholds: **mAP@75 = 0.950**.
 | `image4.jpeg` | maggi-noodles, nevia-cream, taaza-tea-leaves | 0.873, 0.867, 0.865 |
 | `image3.jpeg` | maggi-noodles, taaza-tea-leaves | 0.809, 0.546 |
 
-### Three caveats that must accompany those numbers
+### Four caveats that must accompany those numbers
 
-**1. Probable augmentation leakage — treat the metrics as an upper bound.** The notebook splits `final-grocery-data` 70/20/10 by shuffling at the *image file* level. The Roboflow export contains 4,173 images generated from **1,391 source photographs** — exactly three output images per source. A random file-level shuffle therefore almost certainly places augmented variants of the same photograph in both the training and validation splits. When that happens, validation performance is measured partly on images the model has effectively already seen, and the resulting figures are optimistic by an unknown margin.
+**1. The validation set was not held out from training.** The notebook re-creates the 70/20/10 split with `random.shuffle` and no fixed seed, then validates weights that were trained in a separate, earlier session on a different shuffle. Most of the 834 validation images were therefore very likely in that model's training set. This alone makes the figures an upper bound, and it is the biggest reason they should not be quoted as the detector's accuracy.
+
+**2. Probable augmentation leakage — treat the metrics as an upper bound.** The notebook splits `final-grocery-data` 70/20/10 by shuffling at the *image file* level. The Roboflow export contains 4,173 images generated from **1,391 source photographs** — exactly three output images per source. A random file-level shuffle therefore almost certainly places augmented variants of the same photograph in both the training and validation splits. When that happens, validation performance is measured partly on images the model has effectively already seen, and the resulting figures are optimistic by an unknown margin.
 
 This is worth raising proactively rather than defending under questioning. The correct fix is a **group-aware split** — partition by source photograph, then augment each partition independently — and re-running it would produce the honest number. Until that is done, "0.987 mAP@50 on a randomly split augmented dataset" is the accurate way to state the result.
 
-**2. These are detector metrics, not system metrics.** They measure YOLOv8s against a curated dataset of four products. They say nothing about CAELIX end to end: nothing about cart-mounted camera imagery, store lighting, occlusion from stacked items, or the barcode-weight-vision cross-check that is the actual contribution. Restating 0.987 as "CAELIX is 98.7% accurate" would be false.
+**3. These are detector metrics, not system metrics.** They measure YOLOv8s against a curated dataset of four products. They say nothing about CAELIX end to end: nothing about cart-mounted camera imagery, store lighting, occlusion from stacked items, or the barcode-weight-vision cross-check that is the actual contribution. Restating 0.987 as "CAELIX is 98.7% accurate" would be false.
 
-**3. The test split was never used.** The notebook carves out a 10% test partition (~418 images) and then evaluates only on validation. A genuinely held-out test number does not exist.
+**4. The test split was never used.** The notebook carves out a 10% test partition (~418 images) and then evaluates only on validation. A genuinely held-out test number does not exist.
 
 > **Note on the notebook's title.** It is published as "…95% Precision", but the measured overall precision is **0.962**. The figure closest to 95% is mAP@75 (0.950). Anyone citing this work should quote the specific metric rather than the title.
 
@@ -168,7 +170,7 @@ For completeness, the metrics a reader might reasonably expect — none of which
 
 | Metric | Status |
 |---|---|
-| Detector precision / recall / mAP on the curated dataset | **Measured** — see §3 |
+| Detector precision / recall / mAP on the curated dataset | **Recorded, but likely inflated** — see §3 |
 | Detector inference speed | **Measured** — 8.5 ms/image on a T4 |
 | Detector performance on cart-mounted camera imagery | Never measured |
 | Detector performance on a group-aware (leak-free) split | Never measured |
