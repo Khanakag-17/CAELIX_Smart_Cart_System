@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+title: "CAELIX - Frictionless Checkout Smart Cart"
+message: "If you reference this project, please cite it as below."
+type: software
+authors:
+  - family-names: Verma
+    given-names: "Aashman Singh"
+  - family-names: Soni
+    given-names: Abhishree
+  - family-names: Agrawal
+    given-names: Khanak
+  - family-names: Singh
+    given-names: Ashutosh
+repository-code: "https://github.com/Khanakag-17/CAELIX_Smart_Cart_System"
+abstract: >-
+  A multi-modal self-checkout smart cart that cross-verifies barcode scans,
+  measured cart weight, and YOLOv8 computer-vision detections to identify
+  mis-scans and shrinkage. Built on ESP32 with dual load cells, a Flask
+  middleware, and Cloud Firestore.
+keywords:
+  - smart cart
+  - retail automation
+  - object detection
+  - YOLOv8
+  - ESP32
+  - IoT
+license: Apache-2.0
+date-released: "2025-07-22"

@@ -3,10 +3,11 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 from firebase_admin import credentials, firestore, initialize_app
 import os
+from pathlib import Path
 
 # Initialize Firebase (only once)
 if not firebase_admin._apps:
-    cred = credentials.Certificate("serviceAccountKey.json")
+    cred = credentials.Certificate(str(Path(__file__).resolve().parent.parent / "serviceAccountKey.json"))
     initialize_app(cred)
 
 db = firestore.client()

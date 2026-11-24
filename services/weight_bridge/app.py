@@ -2,11 +2,13 @@ from flask import Flask, request
 from firebase_admin import credentials, firestore, initialize_app
 import datetime
 import json
+from pathlib import Path
 
 app = Flask(__name__)
 
 # Firebase setup
-cred = credentials.Certificate("serviceAccountKey.json")
+SERVICE_ACCOUNT = Path(__file__).parent / "serviceAccountKey.json"
+cred = credentials.Certificate(str(SERVICE_ACCOUNT))
 initialize_app(cred)
 db = firestore.client()
 

@@ -1,0 +1,3 @@
+# CAELIX — weight bridge (ESP32 -> Firestore)
+flask==3.0.3
+firebase-admin==6.5.0

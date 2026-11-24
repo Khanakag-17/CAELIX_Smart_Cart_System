@@ -1,0 +1,7 @@
+# CAELIX — vision service
+# Pinned to the versions used for the published training run.
+ultralytics==8.3.168
+opencv-python==4.10.0.84
+scikit-learn==1.5.2
+numpy==1.26.4
+firebase-admin==6.5.0
